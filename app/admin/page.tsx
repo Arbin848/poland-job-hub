@@ -12,12 +12,15 @@ import DynamicCVRenderer, { CVTemplateStyle } from "@/components/DynamicCVRender
 import EmployerHunterModule from "@/components/EmployerHunterModule";
 import InternalTeamHub from "@/components/InternalTeamHub";
 import PlacementKanbanAndFinance from "@/components/PlacementKanbanAndFinance";
+import CandidateShortlistDossier from "@/components/CandidateShortlistDossier";
 
 export default function AdminPortalPage() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"kanban" | "candidates" | "cv-preview" | "team-hub" | "hunter" | "orders" | "legal" | "communications">("kanban");
+  const [activeTab, setActiveTab] = useState<"kanban" | "candidates" | "shortlist" | "cv-preview" | "team-hub" | "hunter" | "orders" | "legal" | "communications">("kanban");
   const [selectedCVTemplate, setSelectedCVTemplate] = useState<CVTemplateStyle>("executive-gold");
+  const [shortlistTargetCompany, setShortlistTargetCompany] = useState("European Logistics & Manufacturing Partner");
+  const [shortlistTargetRole, setShortlistTargetRole] = useState("Urgent Warehouse & Technical Workforce");
   
   // Selection & Filters
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null);
@@ -225,6 +228,17 @@ export default function AdminPortalPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab("shortlist")}
+            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
+              activeTab === "shortlist"
+                ? "border-amber-400 text-amber-400 bg-slate-800/50"
+                : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Award className="w-4 h-4 text-amber-400" /> 📋 Client Shortlist Pack
+          </button>
+
+          <button
             onClick={() => setActiveTab("cv-preview")}
             className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
               activeTab === "cv-preview"
@@ -309,7 +323,22 @@ export default function AdminPortalPage() {
         
         {/* TAB: EMPLOYER HUNTER LEADS */}
         {activeTab === "hunter" && (
-          <EmployerHunterModule />
+          <EmployerHunterModule 
+            onSelectLeadForShortlist={(company, role) => {
+              setShortlistTargetCompany(company);
+              setShortlistTargetRole(role);
+              setActiveTab("shortlist");
+            }}
+          />
+        )}
+
+        {/* TAB: CLIENT SHORTLIST DOSSIER PACK */}
+        {activeTab === "shortlist" && (
+          <CandidateShortlistDossier
+            candidates={candidates}
+            preSelectedCompany={shortlistTargetCompany}
+            preSelectedRole={shortlistTargetRole}
+          />
         )}
 
         {/* TAB: CANDIDATES & VAULT */}
@@ -453,6 +482,13 @@ export default function AdminPortalPage() {
                         className="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm"
                       >
                         <Sparkles className="w-3.5 h-3.5" /> Market CV Dossier
+                      </button>
+
+                      <button
+                        onClick={() => setActiveTab("shortlist")}
+                        className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm border border-slate-200"
+                      >
+                        <Award className="w-3.5 h-3.5 text-amber-600" /> Shortlist Pack
                       </button>
                     </div>
                   </div>

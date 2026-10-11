@@ -140,8 +140,40 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { leadId, language, templateType, customNotes } = body;
+    // If action is create, add custom lead
+    if (body.action === "create") {
+      const id = "lead-" + uuidv4().slice(0, 8);
+      const insertLead = db.prepare(`
+        INSERT INTO employer_leads (
+          id, companyName, country, city, industry, rolesNeeded, estimatedPositions,
+          contactPerson, contactEmail, contactPhone, sourcePortal, scrapedDate,
+          outreachStatus, notes
+        ) VALUES (
+          @id, @companyName, @country, @city, @industry, @rolesNeeded, @estimatedPositions,
+          @contactPerson, @contactEmail, @contactPhone, @sourcePortal, @scrapedDate,
+          @outreachStatus, @notes
+        )
+      `);
+      insertLead.run({
+        id,
+        companyName: body.companyName || "New Enterprise",
+        country: body.country || "Poland",
+        city: body.city || "Warsaw",
+        industry: body.industry || "General Industry",
+        rolesNeeded: body.rolesNeeded || "General Staff",
+        estimatedPositions: Number(body.estimatedPositions) || 5,
+        contactPerson: body.contactPerson || "HR Desk",
+        contactEmail: body.contactEmail || "",
+        contactPhone: body.contactPhone || "",
+        sourcePortal: body.sourcePortal || "Direct / Manual",
+        scrapedDate: new Date().toISOString().slice(0, 10),
+        outreachStatus: body.outreachStatus || "New Lead",
+        notes: body.notes || ""
+      });
+      return NextResponse.json({ success: true, message: "Lead created", data: { id } });
+    }
 
+    const { leadId, language, templateType, customNotes } = body;
     const lead = db.prepare("SELECT * FROM employer_leads WHERE id = ?").get(leadId) as any;
     if (!lead) {
       return NextResponse.json({ success: false, error: "Lead not found" }, { status: 404 });
@@ -231,6 +263,30 @@ Tel: +48 729 350 449 | info@poljobhub.pl`;
         sentAt: now
       }
     });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+// PATCH /api/employer-leads - Update lead status or notes
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, outreachStatus, notes } = body;
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: "Missing lead id" }, { status: 400 });
+    }
+
+    if (outreachStatus && notes !== undefined) {
+      db.prepare("UPDATE employer_leads SET outreachStatus = ?, notes = ? WHERE id = ?").run(outreachStatus, notes, id);
+    } else if (outreachStatus) {
+      db.prepare("UPDATE employer_leads SET outreachStatus = ? WHERE id = ?").run(outreachStatus, id);
+    } else if (notes !== undefined) {
+      db.prepare("UPDATE employer_leads SET notes = ? WHERE id = ?").run(notes, id);
+    }
+
+    return NextResponse.json({ success: true, message: "Lead updated" });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
