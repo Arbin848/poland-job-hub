@@ -9,11 +9,12 @@ import {
   Upload, RefreshCw
 } from "lucide-react";
 import PremiumCVDossier from "@/components/PremiumCVDossier";
+import EmployerHunterModule from "@/components/EmployerHunterModule";
 
 export default function AdminPortalPage() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"candidates" | "orders" | "legal" | "communications" | "cv-preview">("candidates");
+  const [activeTab, setActiveTab] = useState<"candidates" | "hunter" | "orders" | "legal" | "communications" | "cv-preview">("candidates");
   
   // Selection & Filters
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null);
@@ -201,6 +202,17 @@ export default function AdminPortalPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab("hunter")}
+            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
+              activeTab === "hunter"
+                ? "border-amber-400 text-amber-400 bg-slate-800/50"
+                : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" /> Employer Hunter (Leads PL & DE)
+          </button>
+
+          <button
             onClick={() => setActiveTab("cv-preview")}
             className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
               activeTab === "cv-preview"
@@ -249,7 +261,12 @@ export default function AdminPortalPage() {
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
         
-        {/* TAB 1: CANDIDATES & DOCUMENT VAULT */}
+        {/* TAB: EMPLOYER HUNTER LEADS */}
+        {activeTab === "hunter" && (
+          <EmployerHunterModule />
+        )}
+
+        {/* TAB: CANDIDATES & VAULT */}
         {activeTab === "candidates" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
