@@ -32,11 +32,19 @@ export async function GET(request: Request) {
     // Fetch documents for each candidate
     const getDocs = db.prepare("SELECT * FROM documents WHERE candidateId = ? ORDER BY uploadedAt DESC");
 
-    const result = candidates.map(c => ({
-      ...c,
-      languages: JSON.parse(c.languages || "[]"),
-      documents: getDocs.all(c.id)
-    }));
+    const result = candidates.map(c => {
+      let langs = [];
+      try {
+        langs = typeof c.languages === "string" ? JSON.parse(c.languages) : (c.languages || []);
+      } catch {
+        langs = c.languages ? [c.languages] : [];
+      }
+      return {
+        ...c,
+        languages: langs,
+        documents: getDocs.all(c.id)
+      };
+    });
 
     return NextResponse.json({ success: true, data: result });
   } catch (error: any) {
