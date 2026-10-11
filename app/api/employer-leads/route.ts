@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
+import { sendLiveEmail } from "@/lib/mailer";
 
 // Schema initialization for employer leads
 db.exec(`
@@ -192,6 +193,19 @@ Mit freundlichen Grüßen,
 Arbin (B2B Partner Desk)
 PolJobHub | Warschau
 Tel: +48 729 350 449 | info@poljobhub.pl`;
+    }
+
+    // Dispatch live email via Hostinger SMTP
+    if (lead.contactEmail) {
+      try {
+        await sendLiveEmail({
+          to: lead.contactEmail,
+          subject: pitchSubject,
+          text: pitchBody
+        });
+      } catch (err: any) {
+        console.error("Live B2B pitch email delivery error:", err);
+      }
     }
 
     // Update lead status in DB
