@@ -6,14 +6,18 @@ import {
   Building2, Users, FileCheck2, Globe2, ShieldCheck, 
   ArrowRight, CheckCircle2, Search, PhoneCall, Sparkles,
   MapPin, Clock, Award, Briefcase, FileText, ChevronRight,
-  ExternalLink, MessageCircle, AlertCircle
+  ExternalLink, MessageCircle, AlertCircle, Globe
 } from "lucide-react";
 import { initialJobOrders } from "@/lib/mockData";
+import { translations, SupportedLanguage } from "@/lib/translations";
 
 export default function HomePage() {
+  const [lang, setLang] = useState<SupportedLanguage>("en");
   const [searchRef, setSearchRef] = useState("");
   const [trackResult, setTrackResult] = useState<any | null>(null);
   const [activeJobFilter, setActiveJobFilter] = useState<"All" | "Poland" | "Germany">("All");
+
+  const t = translations[lang];
 
   const filteredJobs = initialJobOrders.filter(job => 
     activeJobFilter === "All" ? true : job.country === activeJobFilter
@@ -70,26 +74,45 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-cream text-brand-text">
       
-      {/* Top Bar with real contact info */}
+      {/* Top Bar with Language Selector & Contact */}
       <div className="bg-brand-dark text-slate-300 text-xs py-2 px-4 border-b border-brand-border/20">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+          
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-brand-primary font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               PolJobHub Recruitment Agency
             </span>
             <span className="hidden sm:inline text-slate-500">|</span>
-            <span className="hidden sm:inline text-slate-300">Warsaw, Poland • Active across Poland & Germany</span>
+            <span className="hidden sm:inline text-slate-300">Warsaw, Poland • Operating in PL & DE</span>
           </div>
-          <div className="flex items-center gap-4">
-            <a href="tel:+48729350449" className="hover:text-white font-semibold flex items-center gap-1">
+
+          <div className="flex items-center gap-3">
+            {/* Multi-Language Switcher */}
+            <div className="flex items-center gap-1 bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+              <Globe className="w-3.5 h-3.5 text-brand-primary shrink-0" />
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as SupportedLanguage)}
+                className="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer"
+              >
+                <option value="en" className="text-slate-900">🇬🇧 English</option>
+                <option value="pl" className="text-slate-900">🇵🇱 Polski</option>
+                <option value="de" className="text-slate-900">🇩🇪 Deutsch</option>
+                <option value="hi" className="text-slate-900">🇮🇳 हिन्दी (Hindi)</option>
+                <option value="ne" className="text-slate-900">🇳🇵 नेपाली (Nepali)</option>
+              </select>
+            </div>
+
+            <a href="tel:+48729350449" className="hover:text-white font-semibold hidden md:flex items-center gap-1">
               📞 +48 729 350 449
             </a>
-            <span className="text-slate-600">|</span>
+            
             <Link href="/admin" className="text-brand-primary hover:text-brand-primaryHover font-bold flex items-center gap-1">
-              🔐 Staff Management Portal &rarr;
+              🔐 Portal &rarr;
             </Link>
           </div>
+
         </div>
       </div>
 
@@ -134,13 +157,13 @@ export default function HomePage() {
               href="/apply"
               className="inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-brand-primary hover:bg-brand-primaryHover rounded-lg transition shadow-md"
             >
-              Apply as Candidate
+              {t.applyBtn}
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section with Live Language Support */}
       <section className="relative overflow-hidden py-16 lg:py-24 border-b border-brand-border bg-gradient-to-b from-brand-cream via-white to-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -148,16 +171,15 @@ export default function HomePage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/30 text-brand-primaryDark text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
-                Cross-Border Recruitment & Legalization Partner
+                {t.badge}
               </div>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-brand-dark tracking-tight leading-tight">
-                Reliable Workforce <br />
-                <span className="text-brand-primary">Solutions for Europe</span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-brand-dark tracking-tight leading-tight">
+                {t.heroTitle}
               </h1>
               
               <p className="text-base sm:text-lg text-brand-muted max-w-2xl leading-relaxed">
-                We connect companies in Poland and Germany with verified, job-ready workers for manufacturing, logistics, construction, and skilled trades. Full support in English, Hindi, and Nepali, with 30-day replacement guarantees and comprehensive legalization assistance.
+                {t.heroDesc}
               </p>
 
               <div className="flex flex-wrap gap-4 pt-2">
@@ -165,13 +187,13 @@ export default function HomePage() {
                   href="/apply"
                   className="px-6 py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-sm shadow-lg shadow-brand-primary/20 transition flex items-center gap-2"
                 >
-                  Submit Candidate Profile <ArrowRight className="w-4 h-4" />
+                  {t.applyBtn} <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
                   href="#for-employers"
                   className="px-6 py-3.5 rounded-xl bg-white text-brand-dark border border-brand-border font-bold text-sm hover:bg-slate-50 transition shadow-sm flex items-center gap-2"
                 >
-                  <Building2 className="w-4 h-4 text-brand-primary" /> Request Workforce Quote
+                  <Building2 className="w-4 h-4 text-brand-primary" /> {t.requestWorkersBtn}
                 </a>
               </div>
 
@@ -192,7 +214,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Self-Service Case Tracker (High Value for User) */}
+            {/* Self-Service Case Tracker */}
             <div className="lg:col-span-5" id="track-case">
               <div className="bg-white rounded-2xl shadow-xl border border-brand-border p-6 sm:p-8 space-y-5">
                 <div>
@@ -202,9 +224,9 @@ export default function HomePage() {
                       Live 24/7
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-brand-dark mt-1">Live Case & Visa Status Tracker</h3>
+                  <h3 className="text-xl font-bold text-brand-dark mt-1">{t.trackTitle}</h3>
                   <p className="text-xs text-brand-muted mt-1 leading-relaxed">
-                    Check the real-time stage of your job placement, work permit, or legal case without waiting on phone calls.
+                    {t.trackDesc}
                   </p>
                 </div>
 
@@ -213,7 +235,7 @@ export default function HomePage() {
                     <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                     <input
                       type="text"
-                      placeholder="Enter Reference Code (e.g. PJH-1042)"
+                      placeholder={t.trackPlaceholder}
                       value={searchRef}
                       onChange={(e) => setSearchRef(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-border text-brand-dark font-mono text-xs placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
@@ -223,7 +245,7 @@ export default function HomePage() {
                     type="submit"
                     className="w-full py-3 bg-brand-dark hover:bg-black text-white font-bold rounded-xl text-xs transition shadow-md"
                   >
-                    Check Real-Time Status &rarr;
+                    {t.trackBtn} &rarr;
                   </button>
                 </form>
 
@@ -252,9 +274,9 @@ export default function HomePage() {
                 )}
 
                 <div className="pt-2 flex items-center justify-between text-xs text-brand-muted">
-                  <span>Don't have a code yet?</span>
+                  <span>New candidate?</span>
                   <Link href="/apply" className="font-bold text-brand-primary hover:underline">
-                    Submit Candidate Application &rarr;
+                    {t.applyBtn} &rarr;
                   </Link>
                 </div>
               </div>
@@ -264,15 +286,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Interactive Live Vacancies Section */}
+      {/* Interactive Vacancies Section */}
       <section className="py-20 bg-white border-b border-brand-border" id="vacancies">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <span className="text-xs font-bold text-brand-primary tracking-wider uppercase">Active Openings</span>
-              <h2 className="text-3xl font-black text-brand-dark mt-1">Direct Employer Vacancies in Poland & Germany</h2>
-              <p className="text-sm text-brand-muted mt-1">Verified contracts with free accommodation and legally compliant documentation.</p>
+              <h2 className="text-3xl font-black text-brand-dark mt-1">{t.activeVacancies}</h2>
+              <p className="text-sm text-brand-muted mt-1">{t.vacanciesSubtitle}</p>
             </div>
 
             {/* Country Filters */}
@@ -319,7 +341,7 @@ export default function HomePage() {
                       📍 {job.country} ({job.city})
                     </span>
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                      Immediate Start
+                      {t.immediateStart}
                     </span>
                   </div>
 
@@ -328,11 +350,11 @@ export default function HomePage() {
 
                   <div className="p-3 bg-white rounded-xl border border-brand-border text-xs space-y-1">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Pay / Remuneration:</span>
+                      <span className="text-slate-500">{t.pay}:</span>
                       <span className="font-bold text-brand-dark">{job.salaryOffered}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Required Languages:</span>
+                      <span className="text-slate-500">{t.languages}:</span>
                       <span className="font-bold text-brand-primary">{job.requiredLanguages.join(", ")}</span>
                     </div>
                   </div>
@@ -362,10 +384,10 @@ export default function HomePage() {
             <div className="lg:col-span-7 space-y-6">
               <span className="text-xs font-bold text-brand-primary uppercase tracking-widest">B2B Recruitment Solutions</span>
               <h2 className="text-3xl sm:text-4xl font-black">
-                Staffing Solutions for Factories & Warehouses in Poland & Germany
+                {t.forEmployersTitle}
               </h2>
               <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-                Tired of high turnover and communication breakdowns? PolJobHub supplies dedicated teams of pre-screened, English, Hindi, and Nepali-speaking workers. We personally manage initial orientation, bilingual coordination, and provide a 30-day replacement guarantee.
+                {t.forEmployersDesc}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold text-slate-300">
@@ -440,7 +462,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Legalization Desk Section (Passive Income Generator) */}
+      {/* Legalization Desk Section */}
       <section className="py-20 bg-brand-cream" id="legalization">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-3xl border border-brand-border p-8 sm:p-12 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -450,10 +472,10 @@ export default function HomePage() {
                 Partner Law Firm Assistance
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-brand-dark">
-                Legalization, Karta Pobytu & Visa Support Desk
+                {t.legalDeskTitle}
               </h2>
               <p className="text-sm text-brand-muted leading-relaxed">
-                Need help changing your employer without losing your legal stay? Waiting months on your *Urząd Wojewódzki* decision? PolJobHub collaborates with certified Polish legal specialists to manage your case from filing to final card collection.
+                {t.legalDeskDesc}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2">
@@ -493,7 +515,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer matching poljobhub.pl */}
+      {/* Footer */}
       <footer className="mt-auto bg-brand-dark text-slate-400 py-12 border-t border-white/10 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
