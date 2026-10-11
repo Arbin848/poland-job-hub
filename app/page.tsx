@@ -136,8 +136,11 @@ export default function HomePage() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8 font-semibold text-brand-text text-sm">
+          <nav className="hidden lg:flex items-center gap-7 font-semibold text-brand-text text-sm">
             <a href="#vacancies" className="hover:text-brand-primary transition">Open Vacancies</a>
+            <Link href="/cv-builder" className="text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 hover:bg-amber-100 transition flex items-center gap-1 font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Free CV Builder
+            </Link>
             <a href="#for-employers" className="hover:text-brand-primary transition">For Employers (PL & DE)</a>
             <a href="#legalization" className="hover:text-brand-primary transition">Legalization & Visas</a>
             <a href="#track-case" className="hover:text-brand-primary transition">Track Case Status</a>
