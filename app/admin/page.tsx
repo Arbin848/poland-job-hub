@@ -186,8 +186,17 @@ export default function AdminPortalPage() {
             </span>
             <span className="text-slate-400">Arbin (Founder Admin)</span>
             <Link href="/" className="text-slate-400 hover:text-white transition">
-              View Public Site &rarr;
+              View Public Site
             </Link>
+            <button
+              onClick={async () => {
+                await fetch("/api/auth", { method: "DELETE" });
+                window.location.href = "/login";
+              }}
+              className="text-amber-400 hover:text-amber-300 font-bold transition"
+            >
+              Logout 🔒
+            </button>
           </div>
         </div>
 
@@ -420,6 +429,15 @@ export default function AdminPortalPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <a
+                        href={`https://wa.me/${selectedCandidate.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${selectedCandidate.fullName}, this is PolJobHub regarding your placement update (Ref: ${selectedCandidate.referenceCode}).`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" /> 1-Click WhatsApp
+                      </a>
+
                       <button
                         onClick={() => {
                           setCommMessage(`Hello ${selectedCandidate.fullName}, this is PolJobHub regarding your placement...`);
@@ -427,7 +445,7 @@ export default function AdminPortalPage() {
                         }}
                         className="px-3.5 py-2 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm"
                       >
-                        <Send className="w-3.5 h-3.5 text-amber-400" /> 1-Click Msg / SMS
+                        <Send className="w-3.5 h-3.5 text-amber-400" /> SMS / Email
                       </button>
 
                       <button
