@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
+import { sendLiveEmail } from "@/lib/mailer";
 
 // GET /api/communications - List all communication logs
 export async function GET() {
@@ -24,6 +25,19 @@ export async function POST(request: Request) {
 
     const id = uuidv4();
     const now = new Date().toISOString();
+
+    // If Email type, dispatch via live mailer
+    if (type === "Email") {
+      try {
+        await sendLiveEmail({
+          to: recipientContact,
+          subject: subject || "Update from PolJobHub Recruitment Desk",
+          text: messageText
+        });
+      } catch (mailErr: any) {
+        console.error("Live email dispatch failed:", mailErr);
+      }
+    }
 
     // Log the message to persistent DB
     const insert = db.prepare(`
