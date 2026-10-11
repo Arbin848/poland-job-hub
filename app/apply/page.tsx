@@ -26,7 +26,10 @@ export default function ApplyPage() {
     notes: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Check language gatekeeper: candidate must speak English, Hindi, or Nepali
@@ -36,9 +39,46 @@ export default function ApplyPage() {
     }
 
     setLanguageError(false);
-    const newRef = "PJH-" + Math.floor(1000 + Math.random() * 9000);
-    setRefNumber(newRef);
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const languages: string[] = [];
+      if (formData.speaksEnglish) languages.push("English");
+      if (formData.speaksHindi) languages.push("Hindi");
+      if (formData.speaksNepali) languages.push("Nepali");
+
+      const res = await fetch("/api/candidates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          nationality: formData.nationality,
+          currentLocation: formData.currentLocation,
+          primarySkill: formData.primarySkill,
+          experienceYears: Number(formData.experienceYears) || 0,
+          legalStatus: formData.legalStatus,
+          languages,
+          needsLegalAssistance: formData.needsLegalAssistance,
+          legalServiceType: formData.legalServiceType,
+          notes: formData.notes
+        })
+      });
+
+      const json = await res.json();
+      if (json.success && json.data) {
+        setRefNumber(json.data.referenceCode);
+        setSubmitted(true);
+      } else {
+        setSubmitError(json.error || "Failed to submit application. Please try again.");
+      }
+    } catch (err: any) {
+      setSubmitError(err.message || "Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -338,13 +378,21 @@ export default function ApplyPage() {
                 )}
               </div>
 
+              {/* Submit Error */}
+              {submitError && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-semibold">
+                  ⚠️ {submitError}
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-brand-primary hover:bg-brand-primaryHover text-white font-bold rounded-xl text-xs transition shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2"
+                  disabled={submitting}
+                  className="w-full py-3.5 bg-brand-primary hover:bg-brand-primaryHover disabled:opacity-50 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2"
                 >
-                  <Send className="w-4 h-4" /> Register Profile with PolJobHub
+                  <Send className="w-4 h-4" /> {submitting ? "Submitting Registration..." : "Register Profile with PolJobHub"}
                 </button>
                 <p className="text-[11px] text-brand-muted text-center mt-2">
                   Compliant with Polish Labor Law & EU GDPR/RODO data protection.
