@@ -23,51 +23,38 @@ export default function HomePage() {
     activeJobFilter === "All" ? true : job.country === activeJobFilter
   );
 
-  const handleTrack = (e: React.FormEvent) => {
+  const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchRef.trim()) return;
     const ref = searchRef.trim().toUpperCase();
 
-    if (ref === "PJH-1042") {
-      setTrackResult({
-        code: "PJH-1042",
-        name: "Bikash Shrestha",
-        stage: "Matched to Employer & Start Date Confirmed",
-        employer: "Poznań Auto Logistics Sp. z o.o. (Poland)",
-        updated: "October 08, 2026",
-        details: "Contract generated. Accommodation pre-arranged in Poznań. Reporting on-site next Monday.",
-        type: "success"
-      });
-    } else if (ref === "PJH-1043") {
-      setTrackResult({
-        code: "PJH-1043",
-        name: "Gurpreet Singh",
-        stage: "Under Law Firm Legal Review (Annex 1 / TRC)",
-        employer: "Partner Law Firm Desk (Wrocław Voivodeship)",
-        updated: "October 09, 2026",
-        details: "Job transition notice filed. Awaiting confirmation receipt from Urząd Wojewódzki.",
-        type: "warning"
-      });
-    } else if (ref === "PJH-1044") {
-      setTrackResult({
-        code: "PJH-1044",
-        name: "Sunil Thapa",
-        stage: "Work Permit (Zezwolenie Typ A) Pending in Voivodeship",
-        employer: "Silesia Tech Components (Katowice)",
-        updated: "October 05, 2026",
-        details: "Employer work permit application submitted. Estimated issue time: 4-6 weeks.",
-        type: "info"
-      });
-    } else {
-      setTrackResult({
-        code: ref,
-        name: "Registered Applicant",
-        stage: "Under Review & Initial Verification",
-        employer: "Poland Job Hub Recruitment Team",
-        updated: "Recent",
-        details: "Your file is active in our database. Our team will contact you once matched with an employer order.",
-        type: "info"
-      });
+    try {
+      const res = await fetch(`/api/track?code=${encodeURIComponent(ref)}`);
+      const json = await res.json();
+
+      if (json.success) {
+        setTrackResult({
+          code: json.data.code,
+          name: json.data.fullName,
+          stage: json.data.pipelineStage,
+          employer: json.data.assignedEmployer,
+          updated: json.data.updatedAt,
+          details: `Current Status: ${json.data.pipelineStage} (${json.data.legalStatus}). Destination: ${json.data.assignedCountry}.`,
+          type: json.data.badgeType
+        });
+      } else {
+        setTrackResult({
+          code: ref,
+          name: "Not Found",
+          stage: "No active record found",
+          employer: "N/A",
+          updated: "Now",
+          details: json.error || "Please check your reference code.",
+          type: "warning"
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
