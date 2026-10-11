@@ -6,16 +6,17 @@ import {
   Users, Building2, Briefcase, FileCheck, MessageSquare, 
   Search, Filter, Plus, Phone, Mail, Send, CheckCircle, 
   Download, Eye, Shield, Globe, Award, Sparkles, ChevronRight, AlertCircle, X,
-  Upload, RefreshCw
+  Upload, RefreshCw, TrendingUp
 } from "lucide-react";
 import DynamicCVRenderer, { CVTemplateStyle } from "@/components/DynamicCVRenderer";
 import EmployerHunterModule from "@/components/EmployerHunterModule";
 import InternalTeamHub from "@/components/InternalTeamHub";
+import PlacementKanbanAndFinance from "@/components/PlacementKanbanAndFinance";
 
 export default function AdminPortalPage() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"candidates" | "cv-preview" | "team-hub" | "hunter" | "orders" | "legal" | "communications">("candidates");
+  const [activeTab, setActiveTab] = useState<"kanban" | "candidates" | "cv-preview" | "team-hub" | "hunter" | "orders" | "legal" | "communications">("kanban");
   const [selectedCVTemplate, setSelectedCVTemplate] = useState<CVTemplateStyle>("executive-gold");
   
   // Selection & Filters
@@ -193,6 +194,17 @@ export default function AdminPortalPage() {
         {/* Tab Navigation */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 overflow-x-auto text-xs font-bold">
           <button
+            onClick={() => setActiveTab("kanban")}
+            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
+              activeTab === "kanban"
+                ? "border-amber-400 text-amber-400 bg-slate-800/50"
+                : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <TrendingUp className="w-4 h-4 text-emerald-400" /> Pipeline & Revenue Desk
+          </button>
+
+          <button
             onClick={() => setActiveTab("candidates")}
             className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
               activeTab === "candidates"
@@ -273,6 +285,18 @@ export default function AdminPortalPage() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+        
+        {/* TAB: VISUAL PIPELINE KANBAN & REVENUE DESK */}
+        {activeTab === "kanban" && (
+          <PlacementKanbanAndFinance
+            candidates={candidates}
+            onStageChange={handleStageChange}
+            onSelectCandidate={(c) => {
+              setSelectedCandidate(c);
+              setActiveTab("candidates");
+            }}
+          />
+        )}
         
         {/* TAB: EMPLOYER HUNTER LEADS */}
         {activeTab === "hunter" && (
