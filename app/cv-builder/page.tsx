@@ -57,8 +57,11 @@ export default function CandidateCVBuilderPage() {
         })
       });
       const json = await res.json();
-      if (json.success) {
+      if (json.success && json.data) {
         setIsSavedToHub(true);
+        if (json.data.referenceCode) {
+          setCandidateData(prev => ({ ...prev, referenceCode: json.data.referenceCode }));
+        }
       }
     } catch (err) {
       console.error(err);
