@@ -8,7 +8,8 @@ export interface Candidate {
   currentLocation: "Poland" | "Abroad" | "Other EU";
   languages: string[]; // ["English", "Hindi", "Nepali"]
   primarySkill: string; // "Warehouse / Forklift", "Welder", "Production Worker", etc.
-  yearsOfExperience: number;
+  experienceYears?: number;
+  yearsOfExperience?: number;
   education: string;
   legalStatus: "Valid Visa" | "Karta Pobytu" | "Needs Work Permit" | "Student Status" | "Awaiting TRC Decision";
   legalStatusExpiry?: string;
