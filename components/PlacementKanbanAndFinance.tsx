@@ -25,11 +25,17 @@ const PIPELINE_COLUMNS = [
 
 export default function PlacementKanbanAndFinance({ candidates, onStageChange, onSelectCandidate }: KanbanProps) {
   const [filterCountry, setFilterCountry] = useState("All");
+  const [readyIn7DaysOnly, setReadyIn7DaysOnly] = useState(false);
 
   // Filter candidates
-  const filtered = candidates.filter(c => 
-    filterCountry === "All" ? true : (c.assignedCountry || "Poland") === filterCountry
-  );
+  const filtered = candidates.filter(c => {
+    const matchesCountry = filterCountry === "All" ? true : (c.assignedCountry || "Poland") === filterCountry;
+    const matchesFastDeployment = !readyIn7DaysOnly ? true : (
+      c.currentLocation === "Poland" && 
+      (c.legalStatus === "Karta Pobytu" || c.legalStatus === "Student Status" || c.legalStatus === "Valid Visa")
+    );
+    return matchesCountry && matchesFastDeployment;
+  });
 
   // Calculate Financials
   // Polish placements: avg 2,500 PLN placement fee
@@ -128,19 +134,31 @@ export default function PlacementKanbanAndFinance({ candidates, onStageChange, o
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-bold text-slate-700">Filter Destination:</span>
-          <select
-            value={filterCountry}
-            onChange={(e) => setFilterCountry(e.target.value)}
-            className="p-2 rounded-xl border border-slate-300 font-bold bg-slate-50 text-slate-800 focus:outline-none"
-          >
-            <option value="All">All EU Destinations</option>
-            <option value="Poland">Poland</option>
-            <option value="Germany">Germany</option>
-            <option value="Czechia">Czech Republic</option>
-            <option value="Netherlands">Netherlands</option>
-          </select>
+        <div className="flex flex-wrap items-center gap-3 text-xs">
+          <label className="flex items-center gap-1.5 p-2 rounded-xl bg-amber-50 border border-amber-300 font-bold text-amber-950 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={readyIn7DaysOnly}
+              onChange={(e) => setReadyIn7DaysOnly(e.target.checked)}
+              className="rounded text-amber-600 focus:ring-amber-500"
+            />
+            <span>⚡ Ready in 7 Days Only (In Poland & Legal)</span>
+          </label>
+
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-slate-700">Destination:</span>
+            <select
+              value={filterCountry}
+              onChange={(e) => setFilterCountry(e.target.value)}
+              className="p-2 rounded-xl border border-slate-300 font-bold bg-slate-50 text-slate-800 focus:outline-none"
+            >
+              <option value="All">All EU Destinations</option>
+              <option value="Poland">Poland</option>
+              <option value="Germany">Germany</option>
+              <option value="Czechia">Czech Republic</option>
+              <option value="Netherlands">Netherlands</option>
+            </select>
+          </div>
         </div>
       </div>
 

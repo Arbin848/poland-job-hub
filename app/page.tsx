@@ -17,6 +17,40 @@ export default function HomePage() {
   const [trackResult, setTrackResult] = useState<any | null>(null);
   const [activeJobFilter, setActiveJobFilter] = useState<"All" | "Poland" | "Germany">("All");
 
+  // Inbound B2B Client Form State
+  const [inboundCompany, setInboundCompany] = useState("");
+  const [inboundRoles, setInboundRoles] = useState("");
+  const [inboundContact, setInboundContact] = useState("");
+  const [inboundSubmitting, setInboundSubmitting] = useState(false);
+  const [inboundSuccess, setInboundSuccess] = useState(false);
+
+  const handleInboundClientSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inboundCompany || !inboundRoles || !inboundContact) return;
+
+    try {
+      setInboundSubmitting(true);
+      const res = await fetch("/api/employer-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName: inboundCompany,
+          rolesNeeded: inboundRoles,
+          contactInfo: inboundContact,
+          country: "Poland"
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setInboundSuccess(true);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setInboundSubmitting(false);
+    }
+  };
+
   const t = translations[lang];
 
   const filteredJobs = initialJobOrders.filter(job => 
@@ -413,39 +447,55 @@ export default function HomePage() {
               <h3 className="text-lg font-bold text-white">Request Candidate Shortlist</h3>
               <p className="text-xs text-slate-400">Tell us what workers your company needs and we will prepare qualified candidate cards in 24 hours.</p>
 
-              <div className="space-y-3 text-xs">
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Company Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Sp. z o.o. / GmbH"
-                    className="w-full p-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-primary"
-                  />
+              {inboundSuccess ? (
+                <div className="p-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs font-bold text-center space-y-1">
+                  <div className="text-sm">✓ Inquiry Logged to Agency Database!</div>
+                  <p className="font-normal text-[11px] text-emerald-200">Our B2B coordinator is reviewing candidate availability and will contact you shortly.</p>
                 </div>
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Required Workers & Roles</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 10 Warehouse Workers in Poznań"
-                    className="w-full p-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Your Email or Phone</label>
-                  <input
-                    type="text"
-                    placeholder="director@company.com"
-                    className="w-full p-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-primary"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => alert("Request received! Our B2B coordinator will contact you shortly.")}
-                  className="w-full py-3 bg-brand-primary hover:bg-brand-primaryHover text-white font-bold rounded-xl text-xs transition"
-                >
-                  Submit Workforce Demand
-                </button>
-              </div>
+              ) : (
+                <form onSubmit={handleInboundClientSubmit} className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Company Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Panattoni Logistics Sp. z o.o. / GmbH"
+                      value={inboundCompany}
+                      onChange={(e) => setInboundCompany(e.target.value)}
+                      className="w-full p-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Required Workers & Roles</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 10 Warehouse Order Pickers in Poznań"
+                      value={inboundRoles}
+                      onChange={(e) => setInboundRoles(e.target.value)}
+                      className="w-full p-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Your Email or Phone Number</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="director@company.com or +48..."
+                      value={inboundContact}
+                      onChange={(e) => setInboundContact(e.target.value)}
+                      className="w-full p-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={inboundSubmitting}
+                    className="w-full py-3 bg-brand-primary hover:bg-brand-primaryHover text-white font-bold rounded-xl text-xs transition shadow-lg"
+                  >
+                    {inboundSubmitting ? "Submitting Inquiry..." : "Submit Workforce Demand"}
+                  </button>
+                </form>
+              )}
             </div>
 
           </div>
