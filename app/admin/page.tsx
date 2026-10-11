@@ -8,13 +8,15 @@ import {
   Download, Eye, Shield, Globe, Award, Sparkles, ChevronRight, AlertCircle, X,
   Upload, RefreshCw
 } from "lucide-react";
-import PremiumCVDossier from "@/components/PremiumCVDossier";
+import DynamicCVRenderer, { CVTemplateStyle } from "@/components/DynamicCVRenderer";
 import EmployerHunterModule from "@/components/EmployerHunterModule";
+import InternalTeamHub from "@/components/InternalTeamHub";
 
 export default function AdminPortalPage() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"candidates" | "hunter" | "orders" | "legal" | "communications" | "cv-preview">("candidates");
+  const [activeTab, setActiveTab] = useState<"candidates" | "cv-preview" | "team-hub" | "hunter" | "orders" | "legal" | "communications">("candidates");
+  const [selectedCVTemplate, setSelectedCVTemplate] = useState<CVTemplateStyle>("executive-gold");
   
   // Selection & Filters
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null);
@@ -202,17 +204,6 @@ export default function AdminPortalPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("hunter")}
-            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
-              activeTab === "hunter"
-                ? "border-amber-400 text-amber-400 bg-slate-800/50"
-                : "border-transparent text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" /> Employer Hunter (Leads PL & DE)
-          </button>
-
-          <button
             onClick={() => setActiveTab("cv-preview")}
             className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
               activeTab === "cv-preview"
@@ -220,7 +211,29 @@ export default function AdminPortalPage() {
                 : "border-transparent text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Sparkles className="w-4 h-4 text-amber-400" /> Market-Leading CV Dossier
+            <Sparkles className="w-4 h-4 text-amber-400" /> Multi-Template CV Engine
+          </button>
+
+          <button
+            onClick={() => setActiveTab("team-hub")}
+            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
+              activeTab === "team-hub"
+                ? "border-amber-400 text-amber-400 bg-slate-800/50"
+                : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-emerald-400" /> 🔒 Private Team Room (EU Mobility)
+          </button>
+
+          <button
+            onClick={() => setActiveTab("hunter")}
+            className={`py-3 px-4 border-b-2 flex items-center gap-2 transition ${
+              activeTab === "hunter"
+                ? "border-amber-400 text-amber-400 bg-slate-800/50"
+                : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-blue-400" /> Employer Hunter (Leads)
           </button>
 
           <button
@@ -528,28 +541,46 @@ export default function AdminPortalPage() {
           </div>
         )}
 
-        {/* TAB 2: MARKET-LEADING CV DOSSIER GENERATOR */}
+        {/* TAB: PRIVATE INTERNAL TEAM ROOM */}
+        {activeTab === "team-hub" && (
+          <InternalTeamHub />
+        )}
+
+        {/* TAB: MULTI-TEMPLATE CV ENGINE */}
         {activeTab === "cv-preview" && selectedCandidate && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between max-w-4xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-4xl mx-auto bg-white p-6 rounded-3xl border border-slate-200">
               <div>
-                <h2 className="text-2xl font-black text-slate-900">PolJobHub Market-Leading CV Dossier</h2>
+                <h2 className="text-xl font-black text-slate-900">PolJobHub CV Generator Desk</h2>
                 <p className="text-xs text-slate-500">
-                  Anonymized, high-conversion candidate card tailored for German and Polish employers.
+                  Select European market template to generate high-conversion candidate dossiers for employers.
                 </p>
               </div>
 
-              <div className="flex gap-2">
+              {/* Template Switcher */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-bold text-slate-700">Style:</span>
+                <select
+                  value={selectedCVTemplate}
+                  onChange={(e) => setSelectedCVTemplate(e.target.value as CVTemplateStyle)}
+                  className="p-2 rounded-xl border border-slate-300 text-xs font-bold bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                >
+                  <option value="executive-gold">🏆 PolJobHub Executive Gold (Flagship)</option>
+                  <option value="europass-modern">🇪🇺 Europass Modern (EU Standard)</option>
+                  <option value="german-technical">🇩🇪 German Lebenslauf (DE / AT)</option>
+                  <option value="minimalist-slate">📄 Minimalist Slate (Fast Scan)</option>
+                </select>
+
                 <button
                   onClick={() => window.print()}
-                  className="px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-md"
+                  className="px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-md"
                 >
-                  <Download className="w-4 h-4 text-amber-400" /> Export / Print Client PDF
+                  <Download className="w-3.5 h-3.5 text-amber-400" /> Print / Save PDF
                 </button>
               </div>
             </div>
 
-            <PremiumCVDossier candidate={selectedCandidate} />
+            <DynamicCVRenderer candidate={selectedCandidate} template={selectedCVTemplate} />
           </div>
         )}
 
