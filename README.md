@@ -1,37 +1,91 @@
-# Poland Job Hub - European Talent & Relocation Platform
+# PolJobHub — Professional CV & Career Suite for Poland & EU
 
-A full-stack management portal and recruitment platform tailored for cross-border workforce supply in Poland, Germany, and the European Union.
+**PolJobHub** is an executive-grade, modern CV, Cover Letter, and Candidate Card builder tailored specifically for the Polish and European Union labor markets. It provides ATS-compliant resumes, GDPR / RODO 2026 legal clauses, bilingual (Polish / English) support, and STAR-method AI enhancements.
 
-## Key Features
+---
 
-1. **Public Website & Portals:**
-   - **For Employers (B2B):** Dedicated workforce request desk for factories in Poland and staffing agencies in Germany.
-   - **For Job Seekers:** High-converting application flow with a language competency gatekeeper (English, Hindi, Nepali).
-   - **Legalization Desk:** Integrated intake for TRC / Karta Pobytu, Annex 1 changes, and visa appeals forwarded to partner law firms.
-   - **Live Case Tracking:** Self-service reference code lookup (`PJH-1042`) so candidates can monitor their status 24/7 without repetitive inquiries.
+## ✨ Features
 
-2. **Management Command Center (Admin & Staff Portal):**
-   - **Candidate Master Records & Document Vault:** Store passport scans, visas, Karta Pobytu, and certifications with expiry indicators.
-   - **Market-Leading Branded CV Generator:** Export standardized, anonymized European-style candidate dossiers for employers.
-   - **Recruitment Job Order Desk:** Track client hiring quotas and match candidates with one click.
-   - **1-Click SMS & Email Communication Hub:** Dispatch updates and notifications directly to candidates.
-   - **Law Firm Referral Pipeline:** Track legal cases and referral commission payouts.
+- **10 Professional CV Templates**:
+  - *Modern Polish Pro* (Zety/Pracuj.pl standard)
+  - *Swiss Executive* (Corporate prestige)
+  - *Clean ATS Minimal* (100% keyword parsing)
+  - *Creative Tech* (Silicon Valley & IT engineering)
+  - *Neo-Berlin* (Modernist contrast)
+  - *Elegance Serif* (Law & Consulting)
+  - *Euro Modern* (EU Schengen standard)
+  - *Nordic Clean* (Scandinavian minimal)
+  - *Academic Elite* (Research & Higher Ed)
+  - *Dynamic Impact* (Sales & Leadership)
 
-## Getting Started
+- **3 Document Formats in One Suite**:
+  - **CV (A4)**: Complete curriculum vitae with customizable sections, CEFR language levels, UDT/Sanepid licenses, and projects.
+  - **Cover Letter (A4)**: Formal Polish and European business cover letters.
+  - **Candidate Dossier (One-Pager)**: Executive summary card designed for employment agencies and recruitment desks.
 
+- **Strict Bilingual Support**:
+  - Full interface and document support in **Polish (PL)** and **English (EN)**.
+
+- **Polish Employment & Legal Compliance**:
+  - Pre-configured, up-to-date Polish **RODO / GDPR 2026** recruitment consent clauses.
+  - Work permit, PESEL, and labor code guidance.
+  - Netto / Brutto salary calculator for employment contracts (Umowa o Pracę, B2B, Zlecenie).
+
+- **AI-Powered Enhancements**:
+  - **STAR Bullet Enhancer**: Transforms duties into Situation-Task-Action-Result quantified impact bullets using Google Gemini.
+  - **Profile Summary Generator**: Generates concise, high-converting executive summaries.
+  - **ATS Job Offer Matcher**: Scans and compares job postings with the candidate's CV to surface missing keywords.
+
+- **Instant PDF Export & Backup**:
+  - Pixel-perfect A4 printing stylesheet with page-break indicators.
+  - JSON import and export for local offline backups.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [Tailwind CSS v4](https://tailwindcss.com/), [Lucide React](https://lucide.dev/)
+- **Backend / Dev Server**: [Express](https://expressjs.com/), [Vite](https://vitejs.dev/), [TSX](https://github.com/privatenumber/tsx)
+- **AI Engine**: [@google/genai](https://www.npmjs.com/package/@google/genai) (Google Gemini Flash)
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone the repository
 ```bash
-# Install dependencies
-npm install
-
-# Run the development server
-npm run dev
-
-# Open http://localhost:3000 in your browser
+git clone https://github.com/YOUR_USERNAME/poljobhub.git
+cd poljobhub
 ```
 
-## Structure
-- `/app/page.tsx` - Public landing page & candidate tracker
-- `/app/apply/page.tsx` - Candidate registration with language gatekeeper
-- `/app/admin/page.tsx` - Staff and founder management dashboard
-- `/types/index.ts` - TypeScript domain definitions
-- `/lib/mockData.ts` - Seed data for candidates, job orders, and referrals
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+Add your Google Gemini API key:
+```env
+GEMINI_API_KEY="your-api-key-here"
+```
+
+### 4. Run the development server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 5. Build for Production
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 📄 License
+Apache-2.0

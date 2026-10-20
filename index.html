@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Gracefully ignore WebSocket connection errors from Vite HMR in AI Studio sandbox
+      window.addEventListener('unhandledrejection', function(event) {
+        var reason = event && event.reason;
+        var msg = (reason && (reason.message || reason.stack || String(reason))) || '';
+        if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('vite:ws') !== -1 || msg.indexOf('closed without opened') !== -1) {
+          event.preventDefault();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+        }
+      });
+      window.addEventListener('error', function(event) {
+        var msg = (event && (event.message || '')) || '';
+        if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('vite') !== -1) {
+          event.preventDefault();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+        }
+      });
+    </script>
+    <title>PolJobHub - Profesjonalny Kreator CV & Praca w Polsce (RODO, PESEL, ZUS)</title>
+    <meta name="description" content="Nowoczesny, intuicyjny kreator CV, Listów Motywacyjnych i Karty Kandydata dla rynku pracy w Polsce i UE. Zgodność z RODO 2026, legalizacja zatrudnienia, PESEL UKR, kalkulator pensji netto i asystent AI." />
+    <meta property="og:title" content="PolJobHub - Profesjonalny Kreator CV & Praca w Polsce" />
+    <meta property="og:description" content="Nowoczesny, intuicyjny kreator CV, Listów Motywacyjnych i Karty Kandydata dla rynku pracy w Polsce i UE. Zgodność z RODO 2026, legalizacja zatrudnienia, PESEL UKR, kalkulator pensji netto i asystent AI." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-sans selection:bg-rose-100 selection:text-rose-900">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
