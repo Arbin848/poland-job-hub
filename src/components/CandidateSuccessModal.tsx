@@ -22,6 +22,11 @@ import {
   DollarSign,
   AlertCircle
 } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
+
+// Named 2026 ZUS Benchmark Constants for B2B Samozatrudnienie
+export const B2B_ZUS_SPOLECZNY_2026 = 1600; // Przybliżony Duży ZUS 2026
+export const B2B_ZUS_ZDROWOTNY_RYCZALT_2026 = 700; // Średnia składka zdrowotna ryczałt 2026
 
 export type CandidateSuccessTab = 'wizard' | 'legal' | 'salary' | 'jobs' | 'interview';
 
@@ -42,6 +47,8 @@ export const CandidateSuccessModal: React.FC<Props> = ({
   onApplyCV,
   initialTab = 'wizard'
 }) => {
+  useEscapeKey(onClose, isOpen);
+
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
@@ -152,10 +159,22 @@ export const CandidateSuccessModal: React.FC<Props> = ({
         };
       }
     } else {
-      // B2B Samozatrudnienie (Ryczałt)
-      const zusSpoleczny = 1600; // Przybliżony Duży ZUS 2025/2026
-      const zusZdrowotny = 700; // Średni ryczałt
-      const podatek = Math.max(0, Math.round(gross * (b2bTaxRate / 100)));
+      // B2B Samozatrudnienie
+      const isLiniowy19 = b2bTaxRate === 19;
+      const zusSpoleczny = B2B_ZUS_SPOLECZNY_2026;
+      let zusZdrowotny = B2B_ZUS_ZDROWOTNY_RYCZALT_2026;
+      let podatek = 0;
+
+      if (isLiniowy19) {
+        // Podatek liniowy 19%: podstawa = przychód - ZUS społeczny, składka zdrowotna 4.9%
+        const dochod = Math.max(0, gross - zusSpoleczny);
+        zusZdrowotny = Math.max(0, Math.round(dochod * 0.049));
+        podatek = Math.max(0, Math.round(dochod * 0.19));
+      } else {
+        // Ryczałt ewidencjonowany: podatek od przychodu, ryczałtowa zdrowotna
+        podatek = Math.max(0, Math.round(gross * (b2bTaxRate / 100)));
+      }
+
       const netto = Math.max(0, Math.round(gross - zusSpoleczny - zusZdrowotny - podatek));
 
       return {
@@ -206,9 +225,9 @@ export const CandidateSuccessModal: React.FC<Props> = ({
     },
     {
       title: 'PESEL UKR (Obywatele Ukrainy)',
-      desc: 'Legalny pobyt i natychmiastowe prawo do pracy. Pracodawca zgłasza powiadomienie do PUP w ciągu 14 dni przez praca.gov.pl.',
-      badge: 'Specustawa / 14 dni na powiadomienie',
-      statusText: 'PESEL UKR (Ochrona tymczasowa) / Legalna praca bez zezwolenia (Art. 22 specustawy)'
+      desc: 'Legalny pobyt i natychmiastowe prawo do pracy. Powiadomienie do PUP w terminie 7 dni od dnia rozpoczęcia pracy dla obywateli Ukrainy korzystających z ochrony czasowej (art. 5a ustawy o warunkach dopuszczalności powierzania pracy cudzoziemcom, od 5 marca 2026 r.) – zgłoszenie elektroniczne przez praca.gov.pl, bez opłat.',
+      badge: 'Ochrona czasowa / 7 dni na powiadomienie',
+      statusText: 'PESEL UKR (Ochrona czasowa) / Legalna praca bez zezwolenia (art. 5a ustawy od 5 marca 2026 r.)'
     },
     {
       title: 'Karta Pobytu (Pobyt Czasowy / Stały)',
@@ -239,8 +258,17 @@ export const CandidateSuccessModal: React.FC<Props> = ({
   const isEn = cv.language === 'en';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden text-slate-900">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isEn ? 'Candidate Career Hub & Employment Assistant' : 'Centrum Sukcesu Kandydata & Asystent Pracy'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden text-slate-900 my-auto"
+      >
         
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 flex items-start justify-between relative shrink-0">
@@ -744,8 +772,12 @@ export const CandidateSuccessModal: React.FC<Props> = ({
                         className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
                       />
                       <div className="text-xs">
-                        <span className="font-bold text-slate-900 block">Ulga dla Młodych (Wiek poniżej 26 lat)</span>
-                        <span className="text-[11px] text-slate-500">Zwolnienie z podatku PIT (0%). Na umowie zlecenie student otrzymuje 100% brutto!</span>
+                        <span className="font-bold text-slate-900 block">
+                          Poniżej 26 lat (ulga dla młodych) / Under 26 (ulga dla młodych)
+                        </span>
+                        <span className="text-[11px] text-slate-500">
+                          Ulga PIT do 85 528 zł/rok (PIT relief up to 85,528 zł/year). Na umowie zlecenie student otrzymuje 100% brutto!
+                        </span>
                       </div>
                     </label>
                   )}
@@ -804,6 +836,11 @@ export const CandidateSuccessModal: React.FC<Props> = ({
                       <span>Łączny koszt dla pracodawcy (Brutto Brutto):</span>
                       <span className="font-mono font-bold text-emerald-400">~{salaryResults.kosztPracodawcy.toLocaleString('pl-PL')} PLN</span>
                     </div>
+                    {contractType === 'b2b' && (
+                      <div className="text-[10px] text-slate-400 italic text-center pt-1">
+                        Szacunkowo – skonsultuj z księgowym / Approximate – verify with your accountant
+                      </div>
+                    )}
                   </div>
 
                   {/* Recruiter Salary Negotiation Tip */}

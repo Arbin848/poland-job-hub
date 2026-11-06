@@ -18,6 +18,7 @@ import {
   ExternalLink,
   Zap
 } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -50,6 +51,8 @@ export const RecruiterAuditModal: React.FC<Props> = ({
   onChangeCv,
   language
 }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
@@ -111,8 +114,8 @@ export const RecruiterAuditModal: React.FC<Props> = ({
     {
       id: 'rodo',
       category: 'critical',
-      titlePl: 'Klauzula RODO / Ochrona Danych (Wymóg w Polsce)',
-      titleEn: 'Polish GDPR / RODO Consent Clause (Mandatory in PL)',
+      titlePl: 'Klauzula RODO / Ochrona Danych (Mocno zalecana w Polsce)',
+      titleEn: 'Polish GDPR / RODO Consent Clause (Strongly recommended in PL)',
       status: rodoPass ? 'pass' : 'fail',
       descriptionPl: rodoPass
         ? 'Zgoda na przetwarzanie danych osobowych jest włączona i prawidłowa. Rekruter może legalnie przetwarzać Twoją aplikację.'
@@ -245,8 +248,17 @@ export const RecruiterAuditModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Audyt Rekrutera & Zgodność z Polskim Rynkiem' : 'Agency Recruiter Audit & Polish Market Check'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col"
+      >
         {/* Modal Header */}
         <div className="p-4 sm:p-6 bg-slate-900 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -270,6 +282,7 @@ export const RecruiterAuditModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
             className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
           >
             <X className="w-5 h-5" />
@@ -288,13 +301,33 @@ export const RecruiterAuditModal: React.FC<Props> = ({
                 <span>{isPl ? 'Wynik Gotowości Rekrutacyjnej:' : 'Recruitment Readiness Score:'}</span>
                 <span className="text-indigo-600">{getScoreBadge()}</span>
               </div>
-              <p className="text-xs text-slate-600 mt-1">
-                {isPl
-                  ? rodoPass
-                    ? 'Twoje CV spełnia kluczowe polskie wymogi prawne i ma wysokie szanse na przejście przez automatyczny filtr ATS.'
-                    : 'Uwaga! Brak klauzuli RODO dyskwalifikuje CV w 95% polskich firm i agencji pracy.'
-                  : 'Checks compliance with Polish employment standards and automated applicant tracking systems.'}
-              </p>
+              <div className="text-xs text-slate-600 mt-1">
+                {isPl ? (
+                  rodoPass ? (
+                    'Twoje CV spełnia kluczowe polskie wytyczne i ma wysokie szanse na przejście przez automatyczny filtr ATS.'
+                  ) : (
+                    <span>
+                      Wiele polskich firm i agencji oczekuje klauzuli RODO – zalecamy jej dodanie (wymagana m.in. przy zgodzie na przyszłe rekrutacje). Szczegóły:{' '}
+                      <a href="https://uodo.gov.pl" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline font-medium inline-flex items-center gap-0.5">
+                        uodo.gov.pl
+                        <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    </span>
+                  )
+                ) : (
+                  rodoPass ? (
+                    'Your CV satisfies key Polish recruitment standards and ATS keyword requirements.'
+                  ) : (
+                    <span>
+                      Many Polish companies and agencies expect a GDPR/RODO clause – we strongly recommend adding it (required e.g. for future recruitment consent). Source:{' '}
+                      <a href="https://uodo.gov.pl" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline font-medium inline-flex items-center gap-0.5">
+                        uodo.gov.pl
+                        <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    </span>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>

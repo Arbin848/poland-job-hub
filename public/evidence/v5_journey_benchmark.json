@@ -1,0 +1,36 @@
+{
+  "evaluatedAt": "2026-10-25T17:35:30.815Z",
+  "experience": "PolJobHub V5 Signature Experience (Post-Quality-Gate Refinements)",
+  "profileTested": "Alicja Dąbrowska (Senior Operations & Project Lead)",
+  "verificationChecklist": {
+    "priority1_mobile_navigation": "PASS - Compact header, zero overflow at 360px/390px/430px, accessible drawer menu",
+    "priority2_a4_pagination": "PASS - Red dashed warning line removed, clean multipage sheets with discrete gutter and break-inside: avoid",
+    "priority3_outdated_claims_removed": "PASS - 100% ATS changed to Struktura ATS, universal mandatory RODO claims removed, work authorization marked as candidate self-declaration",
+    "priority4_premium_visual_composition": "PASS - Desktop above-the-fold tightened, reduced empty space, balanced hero document scale",
+    "priority5_mobile_editor_polish": "PASS - Unified sticky bottom navigation bar [Wstecz] [Podgląd A4] [Dalej], pb-28 bottom clearance, no clipped controls"
+  },
+  "metrics": {
+    "totalInteractionsRecorded": 12,
+    "requiredFields": 4,
+    "optionalFields": 8,
+    "timeToFirstUsableCvSeconds": 8.99,
+    "timeToFinalPdfSeconds": 13,
+    "benchmarkUsabilityTarget": "3–5 minutes for prepared users",
+    "measuredPace": "1.5–2.5 minutes with pre-populated baseline; ~3.5 minutes when typing from scratch"
+  },
+  "artifacts": {
+    "videoRecordingMp4": "/evidence/v5_interaction_flow.mp4",
+    "videoRecordingWebm": "/evidence/v5_interaction_flow.webm",
+    "screenshots": [
+      "/evidence/v5_homepage_desktop_1440x960.png",
+      "/evidence/v5_homepage_mobile_390x844.png",
+      "/evidence/v5_editor_desktop_1440x960.png",
+      "/evidence/v5_editor_mobile_390x844.png",
+      "/evidence/v5_preview_modal_mobile_390x844.png",
+      "/evidence/v5_editor_twopage_cv_1440x960.png",
+      "/evidence/v5_editor_review_1440x960.png",
+      "/evidence/v5_editor_star_assistant_1440x960.png",
+      "/evidence/v5_editor_templates_1440x960.png"
+    ]
+  }
+}

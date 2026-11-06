@@ -7,7 +7,20 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     color: #0f172a;
     background-color: #f8fafc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
+}
+
+.break-inside-avoid {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.break-after-avoid {
+  break-after: avoid;
+  page-break-after: avoid;
 }
 
 /* Print specific styles for flawless A4 PDF export */
@@ -26,14 +39,39 @@
     padding: 0 !important;
   }
 
-  /* Hide everything except the printable CV canvas */
-  header,
-  nav,
-  footer,
-  aside,
-  button,
+  /* Hide UI elements outside the CV, never hide inside canvas */
+  header.print\:hidden,
+  footer.print\:hidden,
+  nav.print\:hidden,
+  button.print\:hidden,
   .print\:hidden {
     display: none !important;
+  }
+
+  #cv-printable-canvas aside {
+    display: flex !important;
+  }
+
+  #cv-printable-canvas footer {
+    display: block !important;
+  }
+
+  /* Prevent awkward page break splits inside items */
+  .experience-item,
+  .education-item,
+  .skill-cluster,
+  .project-item,
+  .certification-item,
+  .rodo-clause-block,
+  article,
+  li {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
   }
 
   #root,
@@ -60,10 +98,134 @@
     border: none !important;
     width: 100% !important;
     max-width: 210mm !important;
-    min-height: 297mm !important;
+    min-height: 0 !important;
     margin: 0 auto !important;
     padding: 0 !important;
-    page-break-after: avoid;
-    break-after: avoid;
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  /* Reset min-height inside printable canvas during print to prevent trailing blank pages */
+  #cv-printable-canvas div,
+  #cv-printable-canvas aside,
+  #cv-printable-canvas main {
+    min-height: 0 !important;
+  }
+
+  /* Anti-clipping and typography normalization for printed A4 documents */
+  #cv-printable-canvas .truncate {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+
+  #cv-printable-canvas h1,
+  #cv-printable-canvas h2,
+  #cv-printable-canvas h3 {
+    letter-spacing: normal !important;
+  }
+
+  /* Modern Polish multipage continuous sidebar background and layout */
+  div[data-template="modern-polish"],
+  .modern-polish-wrapper {
+    background: linear-gradient(to right, var(--sidebar-color, #1e3a8a) 0%, var(--sidebar-color, #1e3a8a) 36%, #ffffff 36%, #ffffff 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  div[data-template="modern-polish"] > div.flex {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+
+  div[data-template="modern-polish"] aside {
+    display: block !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    width: 36% !important;
+    max-width: 36% !important;
+    flex: 0 0 36% !important;
+    justify-content: flex-start !important;
+    padding: 24px 20px !important;
+  }
+
+  div[data-template="modern-polish"] main {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    width: 64% !important;
+    max-width: 64% !important;
+    flex: 0 0 64% !important;
+    padding: 28px !important;
+  }
+
+  div[data-template="modern-polish"] .skill-cluster {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  div[data-template="modern-polish"] aside .flex-1.rounded-full {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print\:break-before-page {
+    break-before: page !important;
+    page-break-before: always !important;
+    padding-top: 10px !important;
   }
 }
+
+/* Subtle motion enhancements with full prefers-reduced-motion compliance */
+@keyframes floatLeftCard {
+  0%, 100% {
+    transform: translateY(0px) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-4.2deg);
+  }
+}
+
+@keyframes floatRightCard {
+  0%, 100% {
+    transform: translateY(0px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(5.8deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.14;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.22;
+  }
+}
+
+.animate-float-left {
+  animation: floatLeftCard 7s ease-in-out infinite;
+}
+
+.animate-float-right {
+  animation: floatRightCard 8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-left,
+  .animate-float-right,
+  .animate-pulse-glow {
+    animation: none !important;
+  }
+}
+

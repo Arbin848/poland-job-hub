@@ -2,6 +2,7 @@ import React from 'react';
 import { PRESET_PROFILES } from '../data/presets';
 import { FacultyCategory, CVData, LanguageCode } from '../types/cv';
 import { Truck, Code, Stethoscope, Wrench, Coins, Briefcase, GraduationCap, Utensils, Check } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export const FacultyPresetsModal: React.FC<Props> = ({ isOpen, onClose, onSelectPreset, language }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
@@ -29,8 +32,17 @@ export const FacultyPresetsModal: React.FC<Props> = ({ isOpen, onClose, onSelect
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Gotowe Wzorce Branżowe i Wydziałowe' : 'Faculty & Industry Master Presets'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl shadow-2xl max-w-4xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8"
+      >
         <div className="flex items-center justify-between pb-4 border-b border-slate-200">
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -40,7 +52,12 @@ export const FacultyPresetsModal: React.FC<Props> = ({ isOpen, onClose, onSelect
               {isPl ? 'Wybierz swój profil zawodowy lub kierunek' : 'Select your profession or faculty'}
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 font-bold">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
+            className="p-1 text-slate-400 hover:text-slate-600 font-bold rounded"
+          >
             ✕
           </button>
         </div>

@@ -192,8 +192,8 @@ export const DEFAULT_CV: CVData = {
     consultantEmail: 'document.poljobhub@gmail.com'
   },
   agencyBadge: {
-    enabled: true,
-    agencyName: 'PolJobHub Agency'
+    enabled: false,
+    agencyName: ''
   }
 };
 

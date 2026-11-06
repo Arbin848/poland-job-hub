@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ExperienceItem, LanguageCode } from '../../types/cv';
 import { enhanceBulletPoint } from '../../services/aiService';
 import { Plus, Trash2, Sparkles, Loader2, ArrowUp, ArrowDown, Copy } from 'lucide-react';
+import { RealNumbersCoachModal } from '../RealNumbersCoachModal';
 
 interface Props {
   experiences: ExperienceItem[];
@@ -13,10 +14,12 @@ interface Props {
 export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, language, jobTitle }) => {
   const isPl = language === 'pl';
   const [enhancingIndex, setEnhancingIndex] = useState<{ expIdx: number; bulletIdx: number } | null>(null);
+  const [coachTarget, setCoachTarget] = useState<{ expIdx: number; bulletIdx: number; text: string } | null>(null);
   const [suggestionModal, setSuggestionModal] = useState<{
     expIdx: number;
     bulletIdx: number;
     options: string[];
+    isFallback?: boolean;
   } | null>(null);
 
   const handleAddExperience = () => {
@@ -97,14 +100,20 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
     onChange(updated);
   };
 
-  const handleEnhanceBullet = async (expIdx: number, bulletIdx: number) => {
+  const handleTriggerCoach = (expIdx: number, bulletIdx: number) => {
     const rawText = experiences[expIdx].bullets[bulletIdx];
     if (!rawText.trim()) return;
+    setCoachTarget({ expIdx, bulletIdx, text: rawText });
+  };
+
+  const executeEnhancement = async (expIdx: number, bulletIdx: number, metricsPrompt?: string) => {
+    const rawText = experiences[expIdx].bullets[bulletIdx];
+    const textToSend = metricsPrompt ? `${rawText} ${metricsPrompt}` : rawText;
 
     setEnhancingIndex({ expIdx, bulletIdx });
     try {
       const res = await enhanceBulletPoint(
-        rawText,
+        textToSend,
         experiences[expIdx].role || jobTitle,
         'industry',
         language
@@ -113,7 +122,8 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
         setSuggestionModal({
           expIdx,
           bulletIdx,
-          options: res.bullets
+          options: res.bullets,
+          isFallback: Boolean(res.fallback)
         });
       }
     } catch (err) {
@@ -260,14 +270,20 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
 
           {/* Bullets List */}
           <div className="pt-2">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wide">
-                {isPl ? 'Zakres obowiązków & Osiągnięcia (z AI STAR)' : 'Duties & Impact (STAR Method)'}
-              </span>
+            <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+              <div>
+                <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wide block">
+                  {isPl ? 'Zakres obowiązków & Osiągnięcia (z AI STAR)' : 'Duties & Impact (STAR Method)'}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {isPl ? 'Tekst jest wysyłany do Google Gemini w celu wygenerowania sugestii.' : 'Text is sent to Google Gemini to generate suggestions.'}
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={() => handleAddBullet(expIdx)}
-                className="text-xs text-slate-700 hover:text-slate-900 font-medium flex items-center gap-1"
+                className="text-xs text-slate-700 hover:text-slate-900 font-medium flex items-center gap-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 rounded px-1"
+                aria-label={isPl ? 'Dodaj punkt zakresu obowiązków' : 'Add duty bullet'}
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{isPl ? 'Dodaj punkt' : 'Add bullet'}</span>
@@ -292,10 +308,11 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
                     <div className="flex flex-col gap-1 shrink-0 pt-0.5">
                       <button
                         type="button"
-                        onClick={() => handleEnhanceBullet(expIdx, bulletIdx)}
+                        onClick={() => handleTriggerCoach(expIdx, bulletIdx)}
                         disabled={isEnhancing}
                         title={isPl ? 'Ulepsz ten punkt z AI (metoda STAR + liczby)' : 'Enhance with AI (STAR method)'}
-                        className="p-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs transition flex items-center justify-center disabled:opacity-50"
+                        aria-label={isPl ? 'Ulepsz ten punkt z AI Google Gemini' : 'Enhance bullet with Google Gemini AI'}
+                        className="p-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs transition flex items-center justify-center disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
                       >
                         {isEnhancing ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -306,8 +323,9 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
                       <button
                         type="button"
                         onClick={() => handleRemoveBullet(expIdx, bulletIdx)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded text-xs transition"
+                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded text-xs transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-rose-500"
                         title={isPl ? 'Usuń punkt' : 'Remove bullet'}
+                        aria-label={isPl ? 'Usuń ten punkt' : 'Remove this bullet'}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -354,6 +372,12 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
                 : 'AI transformed your bullet into 3 strong action-oriented variants:'}
             </p>
 
+            {suggestionModal.isFallback && (
+              <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-lg mb-3 flex items-center gap-1.5">
+                <span>⚠️ AI unavailable – template suggestion. Please edit before use.</span>
+              </div>
+            )}
+
             <div className="space-y-2.5">
               {suggestionModal.options.map((opt, idx) => (
                 <div
@@ -380,6 +404,27 @@ export const ExperienceSection: React.FC<Props> = ({ experiences, onChange, lang
             </div>
           </div>
         </div>
+      )}
+
+      {/* Real Numbers Coach Modal */}
+      {coachTarget && (
+        <RealNumbersCoachModal
+          isOpen={true}
+          onClose={() => setCoachTarget(null)}
+          duty={coachTarget.text}
+          language={language}
+          onEnhanceWithMetrics={(answers) => {
+            const metricsText = [
+              answers.volume ? `[Wolumen: ${answers.volume}]` : '',
+              answers.teamSize ? `[Zespół/Budżet: ${answers.teamSize}]` : '',
+              answers.result ? `[Rezultat: ${answers.result}]` : ''
+            ].filter(Boolean).join(' ');
+            executeEnhancement(coachTarget.expIdx, coachTarget.bulletIdx, metricsText);
+          }}
+          onSkipAndEnhance={() => {
+            executeEnhancement(coachTarget.expIdx, coachTarget.bulletIdx);
+          }}
+        />
       )}
     </div>
   );

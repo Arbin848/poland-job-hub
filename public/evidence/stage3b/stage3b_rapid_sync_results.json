@@ -1,0 +1,32 @@
+[
+  {
+    "feature": "Personal Details (Full Name)",
+    "preservedInAdvanced": true,
+    "preservedAfterReload": true,
+    "passed": true
+  },
+  {
+    "feature": "Work Experience (New Role)",
+    "preservedInAdvanced": true,
+    "preservedAfterReload": true,
+    "passed": true
+  },
+  {
+    "feature": "Technical Skills (Add Skill)",
+    "preservedInAdvanced": true,
+    "preservedAfterReload": true,
+    "passed": true
+  },
+  {
+    "feature": "Template Selection (Swiss Executive)",
+    "preservedInAdvanced": true,
+    "preservedAfterReload": true,
+    "passed": true
+  },
+  {
+    "feature": "Language Settings (PL -> EN)",
+    "preservedInAdvanced": true,
+    "preservedAfterReload": true,
+    "passed": true
+  }
+]

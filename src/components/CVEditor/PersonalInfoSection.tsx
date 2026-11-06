@@ -39,7 +39,7 @@ export const PersonalInfoSection: React.FC<Props> = ({
           {info.photoUrl ? (
             <img
               src={info.photoUrl}
-              alt="Avatar preview"
+              alt={info.fullName ? `${info.fullName} – podgląd zdjęcia` : 'Kandydat – podgląd zdjęcia'}
               className="w-14 h-14 rounded-md object-cover border border-slate-300"
             />
           ) : (
@@ -103,6 +103,23 @@ export const PersonalInfoSection: React.FC<Props> = ({
             </button>
           )}
         </div>
+
+        {/* Photo Quality & Etiquette Checker */}
+        {info.photoUrl && (
+          <div className="w-full sm:col-span-2 pt-2 border-t border-slate-200/70 text-[11px] text-slate-600 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 text-emerald-700 font-medium">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>
+                {isPl
+                  ? 'Zdjęcie załadowane. Wskazówka: Polscy rekruterzy cenią jednolite, jasne tło i strój biznesowy.'
+                  : 'Photo uploaded. Tip: Recruiters prefer neutral, well-lit backgrounds and professional attire.'}
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">
+              Auto-crop: 1:1 portrait
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Main Details Grid */}
@@ -145,6 +162,11 @@ export const PersonalInfoSection: React.FC<Props> = ({
             placeholder="twoj.email@domena.com"
             className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:outline-hidden focus:ring-1 focus:ring-slate-800"
           />
+          {info.email && !info.email.includes('@') && (
+            <p className="text-[10.5px] text-rose-600 mt-1">
+              {isPl ? 'Wpisz poprawny adres e-mail ze znakiem @' : 'Please provide a valid email containing @'}
+            </p>
+          )}
         </div>
 
         <div>
@@ -159,6 +181,11 @@ export const PersonalInfoSection: React.FC<Props> = ({
             placeholder="+48 601 234 567"
             className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:outline-hidden focus:ring-1 focus:ring-slate-800"
           />
+          {info.phone && !info.phone.trim().startsWith('+') && (
+            <p className="text-[10.5px] text-amber-700 mt-1">
+              {isPl ? 'Wskazówka: Dodaj numer kierunkowy (np. +48 dla Polski), aby rekruterzy mogli zadzwonić.' : 'Tip: Add country code (e.g. +48 for Poland) for recruiter outreach.'}
+            </p>
+          )}
         </div>
 
         <div>
@@ -187,6 +214,14 @@ export const PersonalInfoSection: React.FC<Props> = ({
             placeholder="np. Kat. B, Kat. C+E"
             className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:outline-hidden focus:ring-1 focus:ring-slate-800"
           />
+          {info.drivingLicense && /foreign|zagraniczn|ukr|ind|nep|non-eu|biel|mold/i.test(info.drivingLicense) && (
+            <div className="mt-1.5 text-[11px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-1 rounded flex items-center justify-between">
+              <span>Converting a foreign licence in Poland?</span>
+              <a href="https://prawojazdy.io" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-indigo-900">
+                &rarr; PrawoJazdy.io
+              </a>
+            </div>
+          )}
         </div>
 
         <div>
@@ -251,6 +286,28 @@ export const PersonalInfoSection: React.FC<Props> = ({
               ? 'Wpisanie jasnego statusu usuwa obawy polskich pracodawców przed biurokracją i drastycznie zwiększa liczbę telefonów od agencji.'
               : 'Explicitly stating your Polish legal status eliminates employer hesitation regarding permits.'}
           </p>
+
+          <div className="mt-2.5 pt-2 border-t border-slate-200/80 flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-slate-800">
+                {isPl ? 'Odznaka prawa do pracy w nagłówku CV' : 'Work Authorization Badge in CV Header'}
+              </span>
+              <p className="text-[10px] text-slate-500">
+                {isPl
+                  ? 'Wyświetla zieloną odznakę "✓ Prawo do pracy w Polsce" bezpośrednio w nagłówku CV.'
+                  : 'Displays a verified "✓ Legal right to work in Poland" badge in the CV header.'}
+              </p>
+            </div>
+            <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={Boolean(info.showWorkPermitBadge)}
+                onChange={(e) => onChange({ showWorkPermitBadge: e.target.checked })}
+                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-600 w-4 h-4"
+              />
+              <span>{isPl ? 'Włącz odznakę' : 'Enable badge'}</span>
+            </label>
+          </div>
         </div>
 
         {/* QR Code section */}

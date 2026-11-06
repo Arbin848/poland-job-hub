@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CVData, LanguageCode } from '../types/cv';
 import { Copy, Check, FileText } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export const PlainTextModal: React.FC<Props> = ({ isOpen, onClose, cv, language }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
   const [copied, setCopied] = useState(false);
@@ -66,8 +69,17 @@ ${cv.rodo.enabled ? cv.rodo.text : ''}
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-5 sm:p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Kopiuj Czysty Tekst (Pracuj.pl, OLX, LinkedIn)' : 'Copy Plain Text for Job Applications'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-5 sm:p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8"
+      >
         <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
             <FileText className="w-5 h-5 text-slate-800" />
@@ -75,7 +87,12 @@ ${cv.rodo.enabled ? cv.rodo.text : ''}
               {isPl ? 'Kopiuj Czysty Tekst (Pracuj.pl, OLX, LinkedIn)' : 'Copy Plain Text for Job Applications'}
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 font-bold">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
+            className="p-1 text-slate-400 hover:text-slate-600 font-bold rounded"
+          >
             ✕
           </button>
         </div>

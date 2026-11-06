@@ -7,7 +7,7 @@
 ## ✨ Features
 
 - **10 Professional CV Templates**:
-  - *Modern Polish Pro* (Zety/Pracuj.pl standard)
+  - *Modern Polish Pro* (Polish market standard)
   - *Swiss Executive* (Corporate prestige)
   - *Clean ATS Minimal* (100% keyword parsing)
   - *Creative Tech* (Silicon Valley & IT engineering)
@@ -50,12 +50,20 @@
 
 ---
 
+## 🔒 Privacy & Data Protection
+
+- **Local-First Architecture**: Your CV and personal information are stored exclusively in your browser's `localStorage`. No candidate data, database records, or personal contact info are stored on any backend server.
+- **AI Request Scope**: Candidate text is transmitted to the Google Gemini API solely and strictly when you click AI assistant buttons (e.g. "Napisz z AI" or "Popraw punkt z AI").
+- **Legal Notice**: All guidance concerning Polish work eligibility, PESEL UKR, and RODO clauses is provided for educational and informational convenience and does not constitute formal legal counsel.
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/poljobhub.git
-cd poljobhub
+git clone https://github.com/Arbin848/poland-job-hub.git
+cd poland-job-hub
 ```
 
 ### 2. Install dependencies
@@ -71,6 +79,7 @@ cp .env.example .env
 Add your Google Gemini API key:
 ```env
 GEMINI_API_KEY="your-api-key-here"
+GEMINI_MODEL="gemini-2.5-flash"
 ```
 
 ### 4. Run the development server
@@ -89,3 +98,4 @@ npm start
 
 ## 📄 License
 Apache-2.0
+

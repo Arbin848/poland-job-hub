@@ -1,0 +1,151 @@
+{
+  "auditTimestamp": "2026-10-25T19:01:11.179Z",
+  "gitCommitBaseline": "259450218b25ee78bfdbf21fd0b5fd1cabbf0438",
+  "backupArchive": "/tmp/poljobhub_source_backup.tar.gz",
+  "productionPreservation": {
+    "productionHomepage": "PASS - Fully operational",
+    "stage2TemplateGallery": "PASS - Fully operational",
+    "existingCvEditor": "PASS - Fully operational",
+    "allTenTemplates": "PASS - All 10 templates functional and verified",
+    "candidateDataPersistence": "PASS - Zero data loss across reloads and navigation",
+    "polishAndEnglishSupport": "PASS - Bilingual toggle fully functional",
+    "geminiIntegration": "PASS - aiService and STAR assistants operational",
+    "rodoFunctionality": "PASS - Standard and custom clauses intact",
+    "salaryTools": "PASS - Operational",
+    "pdfExportFunctionality": "PASS - Both browser print and vector PDF verified"
+  },
+  "tenTemplatePdfAudit": [
+    {
+      "id": "modern-polish",
+      "name": "Modern Polish (Standard RP)",
+      "pdfFileName": "01_modern_polish_twopage.pdf",
+      "fileSizeKb": 724.2,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "clean-ats",
+      "name": "Clean ATS Minimal",
+      "pdfFileName": "02_clean_ats_twopage.pdf",
+      "fileSizeKb": 272.2,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "euro-modern",
+      "name": "Euro Modern",
+      "pdfFileName": "03_euro_modern_twopage.pdf",
+      "fileSizeKb": 584.7,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "nordic-clean",
+      "name": "Nordic Clean",
+      "pdfFileName": "04_nordic_clean_twopage.pdf",
+      "fileSizeKb": 444.2,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "academic-elite",
+      "name": "Academic Elite",
+      "pdfFileName": "05_academic_elite_twopage.pdf",
+      "fileSizeKb": 433.2,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "dynamic-impact",
+      "name": "Dynamic Impact",
+      "pdfFileName": "06_dynamic_impact_twopage.pdf",
+      "fileSizeKb": 629.8,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "swiss-executive",
+      "name": "Swiss Executive",
+      "pdfFileName": "07_swiss_executive_twopage.pdf",
+      "fileSizeKb": 675.9,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "creative-tech",
+      "name": "Creative Tech",
+      "pdfFileName": "08_creative_tech_twopage.pdf",
+      "fileSizeKb": 554.6,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "berlin-minimal",
+      "name": "Berlin Minimal",
+      "pdfFileName": "09_berlin_minimal_twopage.pdf",
+      "fileSizeKb": 484.3,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    },
+    {
+      "id": "elegance-serif",
+      "name": "Elegance Serif",
+      "pdfFileName": "10_elegance_serif_twopage.pdf",
+      "fileSizeKb": 521.5,
+      "pageCount": 2,
+      "dimensions": "A4 (210 × 297 mm)",
+      "polishDiacriticsRendered": "PASS (Embedded UTF font streams)",
+      "contentIntact": "PASS (All sections intact, no missing blocks)",
+      "headingIntegrity": "PASS (break-inside: avoid applied to headings & cards)",
+      "pdfStatus": "PASS - Inspected and verified"
+    }
+  ],
+  "candidateDataSafetyAudit": {
+    "profileTest": "Katarzyna Wiśniewska-Kowalska (Senior Data & ERP Architect)",
+    "localStorageKey": "polcv_studio_cv_data_v1",
+    "persistenceAcrossReload": "PASS",
+    "persistenceAcrossV5Navigation": "PASS"
+  },
+  "safetyStatus": {
+    "mergedIntoProduction": false,
+    "productionHomepageOverwritten": false,
+    "deployed": false,
+    "readyForReview": true
+  }
+}

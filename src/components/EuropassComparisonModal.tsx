@@ -1,6 +1,7 @@
 import React from 'react';
 import { LanguageCode } from '../types/cv';
 import { Check, X, ShieldAlert, Award, FileText, Zap, Compass } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export const EuropassComparisonModal: React.FC<Props> = ({ isOpen, onClose, language, onSelectModernEuro }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
@@ -53,8 +56,17 @@ export const EuropassComparisonModal: React.FC<Props> = ({ isOpen, onClose, lang
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Dlaczego warto zamienić Europass na PolCV Studio?' : 'Why PolCV Studio Outperforms Europass'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8"
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200">
           <div>
@@ -66,7 +78,9 @@ export const EuropassComparisonModal: React.FC<Props> = ({ isOpen, onClose, lang
             </h2>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
             className="p-1 text-slate-400 hover:text-slate-600 rounded text-lg font-bold"
           >
             ✕

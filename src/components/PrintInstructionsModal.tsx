@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { LanguageCode } from '../types/cv';
 import { Printer, Check, X, Sliders, Layers, Sparkles, HelpCircle } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -15,6 +16,8 @@ export const PrintInstructionsModal: React.FC<Props> = ({
   onProceedPrint,
   language
 }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
   const [dontShowAgain, setDontShowAgain] = useState(false);
@@ -32,8 +35,17 @@ export const PrintInstructionsModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden my-auto flex flex-col">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Jak pobrać perfekcyjny plik PDF z CV?' : 'How to export a perfect A4 PDF'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden my-auto flex flex-col"
+      >
         {/* Header */}
         <div className="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">

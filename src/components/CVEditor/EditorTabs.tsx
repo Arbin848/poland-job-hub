@@ -35,6 +35,7 @@ interface Props {
   language: LanguageCode;
   onOpenTemplatesModal?: () => void;
   onOpenPresetsModal?: () => void;
+  onSwitchToGuided?: () => void;
 }
 
 type CvTabKey =
@@ -53,7 +54,8 @@ export const EditorTabs: React.FC<Props> = ({
   onChange,
   language,
   onOpenTemplatesModal,
-  onOpenPresetsModal
+  onOpenPresetsModal,
+  onSwitchToGuided
 }) => {
   const isPl = language === 'pl';
   const [activeTab, setActiveTab] = useState<CvTabKey>('personal');
@@ -372,6 +374,24 @@ export const EditorTabs: React.FC<Props> = ({
   // Standard CV Document Editing
   return (
     <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden flex flex-col h-full">
+      {/* Switch to Guided Step-by-Step Editor Banner */}
+      {onSwitchToGuided && (
+        <div className="px-3.5 py-2 bg-gradient-to-r from-indigo-50/90 via-purple-50/90 to-indigo-50/90 border-b border-indigo-100 flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-1.5 text-indigo-900 font-semibold truncate">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+            <span className="truncate">{isPl ? 'Wolisz prosty kreator krok po kroku?' : 'Prefer a guided step-by-step editor?'}</span>
+          </div>
+          <button
+            type="button"
+            onClick={onSwitchToGuided}
+            className="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs flex items-center gap-1 transition shadow-2xs shrink-0 cursor-pointer"
+          >
+            <span>{isPl ? 'Kreator Krok po Kroku (V5 Guided)' : 'Switch to Guided Editor'}</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Editor Top Progress & Section Guide */}
       <div className="px-4 py-3 border-b border-slate-200 bg-slate-50/80">
         <div className="flex items-center justify-between gap-3 mb-2">
@@ -399,6 +419,34 @@ export const EditorTabs: React.FC<Props> = ({
             className="bg-emerald-500 h-full transition-all duration-300 rounded-full"
             style={{ width: `${progressPct}%` }}
           />
+        </div>
+
+        {/* Tab-specific one-line tip */}
+        <div className="text-[11px] text-slate-600 mt-2 flex items-center gap-1.5 bg-white/70 px-2.5 py-1 rounded-md border border-slate-200/60">
+          <span className="text-amber-500 font-bold shrink-0">💡</span>
+          <span className="truncate">
+            {isPl ? {
+              personal: 'Podaj bezpośredni telefon z prefiksem (+48) oraz status prawa do pracy w Polsce.',
+              summary: 'Zwięzły 2-3 zdaniowy profil zawodowy skupiony na uprawnieniach i mierzalnym sukcesie.',
+              experience: 'Stosuj metodę STAR i mocne czasowniki akcji (np. zoptymalizował, zredukował koszty).',
+              education: 'Wpisz uczelnie, kierunki lub technika zawodowe w porządku od najnowszego.',
+              skills: 'Wymień twarde systemy (SAP, WMS, Excel, CAD) i technologie kluczowe w Twojej branży.',
+              languages: 'Stosuj europejską skalę CEFR (A1-C2). Pracodawcy w RP najczęściej pytają o angielski B2/C1.',
+              certifications: 'Wpisz uprawnienia UDT, SEP, Sanepid, certyfikaty branżowe lub projekty.',
+              rodo: 'Klauzula RODO umożliwia polskim rekruterom i agencjom pracy legalny kontakt.',
+              layout: 'Dopasuj krój czcionki, gęstość tekstu i widoczność sekcji, by CV mieściło się na A4.'
+            }[activeTab] : {
+              personal: 'Include your phone with country code (+48) and Polish work eligibility status.',
+              summary: 'A punchy 2-3 sentence executive profile emphasizing credentials and measurable results.',
+              experience: 'Use the STAR method with action verbs and quantifiable impact.',
+              education: 'List academic degrees or vocational qualifications in reverse chronological order.',
+              skills: 'Focus on hard tools, software suites (SAP, ERP, CAD), and technical competencies.',
+              languages: 'Use the European CEFR framework (A1-C2). Employers look for English B2/C1.',
+              certifications: 'List vocational licenses (UDT, SEP, health book) and key portfolio projects.',
+              rodo: 'The GDPR/RODO clause grants Polish recruiters legal authorization to contact you.',
+              layout: 'Calibrate typography, spacing density, and section visibility for optimal A4 layout.'
+            }[activeTab]}
+          </span>
         </div>
       </div>
 

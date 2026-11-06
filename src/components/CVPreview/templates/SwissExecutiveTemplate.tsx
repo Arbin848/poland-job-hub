@@ -47,11 +47,11 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
   };
 
   return (
-    <div className="bg-white text-slate-900 w-full min-h-[1120px] flex flex-col justify-between font-sans shadow-lg print:shadow-none text-[12.8px] leading-relaxed">
+    <div className="bg-white text-slate-900 w-full min-h-[1120px] print:min-h-0 flex flex-col justify-between font-sans shadow-lg print:shadow-none text-[12.8px] leading-relaxed">
       <div className="flex flex-col sm:flex-row flex-1">
-        {/* Left Dark / Sapphire Executive Sidebar (35% width) */}
+        {/* Left Dark / Sapphire Executive Sidebar (36% width) */}
         <aside
-          className="w-full sm:w-[35%] p-6 sm:p-7 text-white flex flex-col justify-between shrink-0"
+          className="w-full sm:w-[36%] px-5 sm:px-6 py-6 text-white flex flex-col justify-between shrink-0"
           style={{
             backgroundColor: primary,
             backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.25) 100%)'
@@ -68,7 +68,7 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
                     size={116}
                     shape="circle"
                     verified={cv.agencyBadge?.enabled}
-                    verifiedLabel={cv.agencyBadge?.agencyName || 'Verified Candidate'}
+                    verifiedLabel={cv.agencyBadge?.agencyName || (isPl ? 'Profil kandydata' : 'Candidate Profile')}
                     accentColor={primary}
                   />
                 </div>
@@ -82,101 +82,134 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
               </p>
 
               {cv.agencyBadge?.enabled && (
-                <div className="mt-2.5 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-semibold text-emerald-300 border border-emerald-400/30">
-                  <ShieldCheck className="w-3 h-3 text-emerald-300" />
-                  <span>{cv.agencyBadge.agencyName || 'Verified Candidate'}</span>
+                <div className="mt-2.5 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-semibold text-slate-200 border border-white/20">
+                  <span>{cv.agencyBadge.agencyName || (isPl ? 'Profil kandydata' : 'Candidate Profile')}</span>
                 </div>
               )}
             </div>
 
             {/* Contact Details Card */}
-            <div className="space-y-2.5 pt-2 border-t border-white/15 text-xs text-white/90">
+            <div className="space-y-2.5 pt-2 border-t border-white/15 text-white/90">
               <div className="font-bold text-[11px] uppercase tracking-wider text-white/70 mb-2">
                 {isPl ? 'Kontakt & Dane' : 'Contact Details'}
               </div>
 
               {personalInfo.email && (
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0">
+                <div className="flex items-start sm:items-center gap-2 min-w-0">
+                  <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                     <Mail className="w-3.5 h-3.5 text-white/80" />
                   </span>
-                  <span className="truncate">{personalInfo.email}</span>
+                  <span className="text-[11.5px] leading-tight break-all font-medium select-all min-w-0 flex-1">{personalInfo.email}</span>
                 </div>
               )}
 
               {personalInfo.phone && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0">
                     <Phone className="w-3.5 h-3.5 text-white/80" />
                   </span>
-                  <span className="tabular-nums font-mono">{personalInfo.phone}</span>
+                  <span className="tabular-nums font-mono text-[11.5px] min-w-0">{personalInfo.phone}</span>
                 </div>
               )}
 
               {personalInfo.location && (
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0">
+                <div className="flex items-start sm:items-center gap-2 min-w-0">
+                  <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                     <MapPin className="w-3.5 h-3.5 text-white/80" />
                   </span>
-                  <span>{personalInfo.location}</span>
+                  <span className="text-[11.5px] leading-tight break-words min-w-0 flex-1">{personalInfo.location}</span>
                 </div>
               )}
 
               {personalInfo.linkedIn && (
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0">
+                <div className="flex items-start sm:items-center gap-2 min-w-0">
+                  <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                     <Linkedin className="w-3.5 h-3.5 text-white/80" />
                   </span>
-                  <span className="truncate">{personalInfo.linkedIn.replace(/^https?:\/\//, '')}</span>
+                  <span className="text-[11.5px] leading-tight break-all font-medium select-all min-w-0 flex-1">{personalInfo.linkedIn.replace(/^https?:\/\//, '')}</span>
                 </div>
               )}
 
               {personalInfo.drivingLicense && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   <span className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center shrink-0">
                     <Car className="w-3.5 h-3.5 text-white/80" />
                   </span>
-                  <span>{personalInfo.drivingLicense}</span>
+                  <span className="text-[11.5px] min-w-0">{personalInfo.drivingLicense}</span>
                 </div>
               )}
 
               {personalInfo.workEligibility && (
-                <div className="flex items-start gap-2 pt-1">
+                <div className="flex items-start gap-2 pt-1 min-w-0">
                   <span className="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
                     <ShieldCheck className="w-3.5 h-3.5" />
                   </span>
-                  <span className="text-[11px] leading-tight text-white/85">{personalInfo.workEligibility}</span>
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-[9px] uppercase font-bold tracking-wider text-emerald-300/90">
+                      {isPl ? 'Oświadczenie kandydata' : 'Candidate Declaration'}
+                    </span>
+                    <span className="text-[11px] leading-tight text-white/90 font-medium break-words">
+                      {personalInfo.workEligibility}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Skills with Executive Progress Bars */}
-            {vis.skills && (cv.technicalSkills.length > 0 || cv.toolsAndCertificates.length > 0) && (
-              <div className="pt-2 border-t border-white/15 space-y-2.5">
-                <div className="font-extrabold text-[11px] uppercase tracking-wider text-white/70">
-                  {t.skills}
-                </div>
-                <div className="space-y-2">
-                  {[...cv.technicalSkills, ...cv.toolsAndCertificates].slice(0, 7).map((skill, i) => {
-                    const percent = Math.max(70, 96 - i * 4);
-                    return (
-                      <div key={i} className="space-y-0.5 text-xs">
-                        <div className="flex justify-between items-center text-[11px] font-medium text-white/90">
-                          <span className="truncate pr-1">{skill}</span>
-                          <span className="text-[9.5px] font-mono text-white/60">{percent}%</span>
+            {/* Skills with Executive Progress Bars and Complete Skill Stack */}
+            {vis.skills && (cv.technicalSkills.length > 0 || cv.toolsAndCertificates.length > 0) && (() => {
+              const allSkills = [...cv.technicalSkills, ...cv.toolsAndCertificates];
+              const featuredCount = Math.min(7, allSkills.length <= 7 ? allSkills.length : 5);
+              const featured = allSkills.slice(0, featuredCount);
+              const remaining = allSkills.slice(featuredCount);
+
+              return (
+                <div className="pt-2 border-t border-white/15 space-y-2.5 skill-cluster break-inside-avoid">
+                  <div className="font-extrabold text-[11px] uppercase tracking-wider text-white/70 flex items-center justify-between">
+                    <span>{t.skills}</span>
+                    <span className="text-[9.5px] font-mono text-white/50">{allSkills.length}</span>
+                  </div>
+                  <div className="space-y-2">
+                    {featured.map((skill, i) => {
+                      const percent = Math.max(70, 96 - i * 4);
+                      return (
+                        <div key={i} className="space-y-0.5 text-xs">
+                          <div className="flex justify-between items-center text-[11px] font-medium text-white/90">
+                            <span className="truncate pr-1">{skill}</span>
+                            <span className="text-[9.5px] font-mono text-white/60">{percent}%</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-black/30 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-300 bg-gradient-to-r from-amber-400 to-amber-300"
+                              style={{ width: `${percent}%` }}
+                            />
+                          </div>
                         </div>
-                        <div className="w-full h-1.5 bg-black/30 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-300 bg-gradient-to-r from-amber-400 to-amber-300"
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Remaining skills as Swiss precision compact badges */}
+                  {remaining.length > 0 && (
+                    <div className="pt-1.5 space-y-1.5">
+                      <span className="text-[9.5px] font-bold uppercase tracking-wider text-white/60 block">
+                        {isPl ? 'Pozostałe technologie:' : 'Additional Stack:'}
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {remaining.map((skill, idx) => (
+                          <span
+                            key={idx}
+                            className="px-1.5 py-0.5 rounded bg-white/10 text-white/90 text-[10px] font-medium border border-white/15 break-words"
+                          >
+                            {skill}
+                          </span>
+                        ))}
                       </div>
-                    );
-                  })}
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Languages with CEFR Meters */}
             {vis.languages && languages && languages.length > 0 && (
@@ -263,29 +296,29 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
 
                 <div className="space-y-4">
                   {experiences.map((exp) => (
-                    <div key={exp.id} className="relative pl-4 border-l-2 border-slate-200 space-y-1.5 group">
+                    <div key={exp.id} className="relative pl-4 border-l-2 border-slate-200 space-y-1.5 group experience-item break-inside-avoid">
                       <span
                         className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-white border-2"
                         style={{ borderColor: primary }}
                       />
                       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <h3 className="font-bold text-slate-900 text-[13.5px]">
+                        <h3 className="font-bold text-slate-900 text-[13.5px] break-words">
                           {exp.role}
                         </h3>
                         <span className="text-[11px] font-mono font-medium text-slate-500 shrink-0">
                           {exp.startDate} — {exp.current ? (isPl ? 'Obecnie' : 'Present') : exp.endDate}
                         </span>
                       </div>
-                      <div className="text-xs font-semibold text-slate-700">
+                      <div className="text-xs font-semibold text-slate-700 break-words">
                         {exp.company} {exp.location && <span className="font-normal text-slate-500">• {exp.location}</span>}
                       </div>
 
                       {exp.bullets && exp.bullets.length > 0 && (
                         <ul className="space-y-1 pt-1 text-[12px] text-slate-600">
                           {exp.bullets.map((b, bi) => (
-                            <li key={bi} className="flex items-start gap-2">
-                              <span className="text-slate-400 mt-1">▸</span>
-                              <span>{b}</span>
+                            <li key={bi} className="flex items-start gap-2 break-inside-avoid">
+                              <span className="text-slate-400 mt-1 shrink-0">▸</span>
+                              <span className="break-words">{b}</span>
                             </li>
                           ))}
                         </ul>
@@ -299,7 +332,7 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
             {/* Projects / Implementations */}
             {vis.projects && projects && projects.length > 0 && (
               <section className="space-y-3">
-                <div className="flex items-center gap-2 border-b border-slate-200 pb-1.5">
+                <div className="flex items-center gap-2 border-b border-slate-200 pb-1.5 break-after-avoid">
                   <FolderGit2 className="w-4 h-4 text-slate-700" />
                   <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
                     {t.projects || (isPl ? 'Kluczowe Projekty & Wdrożenia' : 'Key Projects & Implementations')}
@@ -308,13 +341,13 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
 
                 <div className="grid grid-cols-1 gap-2.5">
                   {projects.map((proj) => (
-                    <div key={proj.id} className="p-3 bg-slate-50/70 rounded-lg border border-slate-200/80 space-y-1">
+                    <div key={proj.id} className="p-3 bg-slate-50/70 rounded-lg border border-slate-200/80 space-y-1 project-item break-inside-avoid">
                       <div className="flex justify-between items-baseline">
-                        <div className="font-bold text-slate-900 text-xs">{proj.name}</div>
+                        <div className="font-bold text-slate-900 text-xs break-words">{proj.name}</div>
                         {proj.role && <div className="text-[11px] text-slate-500 font-medium">{proj.role}</div>}
                       </div>
                       {proj.description && (
-                        <p className="text-[11.5px] text-slate-600 leading-normal">{proj.description}</p>
+                        <p className="text-[11.5px] text-slate-600 leading-normal break-words">{proj.description}</p>
                       )}
                       {proj.techStack && proj.techStack.length > 0 && (
                         <div className="flex flex-wrap gap-1 pt-1">
@@ -334,7 +367,7 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
             {/* Education */}
             {vis.education && educations && educations.length > 0 && (
               <section className="space-y-3">
-                <div className="flex items-center gap-2 border-b border-slate-200 pb-1.5">
+                <div className="flex items-center gap-2 border-b border-slate-200 pb-1.5 break-after-avoid">
                   <GraduationCap className="w-4 h-4 text-slate-700" />
                   <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
                     {t.education}
@@ -343,20 +376,20 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
 
                 <div className="space-y-2.5">
                   {educations.map((edu) => (
-                    <div key={edu.id} className="text-xs">
+                    <div key={edu.id} className="text-xs education-item break-inside-avoid">
                       <div className="flex justify-between items-baseline">
-                        <span className="font-bold text-slate-900 text-[12.5px]">
+                        <span className="font-bold text-slate-900 text-[12.5px] break-words">
                           {edu.degree} — {edu.fieldOfStudy}
                         </span>
-                        <span className="font-mono text-[11px] text-slate-500">
+                        <span className="font-mono text-[11px] text-slate-500 shrink-0">
                           {edu.startDate} — {edu.endDate}
                         </span>
                       </div>
-                      <div className="text-slate-600 font-medium">
+                      <div className="text-slate-600 font-medium break-words">
                         {edu.institution} {edu.faculty && `(${edu.faculty})`}
                       </div>
                       {edu.gradeOrDetails && (
-                        <div className="text-[11px] text-slate-500 italic mt-0.5">{edu.gradeOrDetails}</div>
+                        <div className="text-[11px] text-slate-500 italic mt-0.5 break-words">{edu.gradeOrDetails}</div>
                       )}
                     </div>
                   ))}
@@ -367,7 +400,7 @@ export const SwissExecutiveTemplate: React.FC<Props> = ({ cv }) => {
 
           {/* RODO Clause */}
           {vis.rodo && rodo.enabled && (
-            <footer className="pt-4 border-t border-slate-200 text-[9.5px] text-slate-400 leading-tight">
+            <footer className="pt-4 border-t border-slate-200 text-[10px] text-slate-500 leading-relaxed rodo-clause-block break-inside-avoid">
               {rodo.text}
             </footer>
           )}

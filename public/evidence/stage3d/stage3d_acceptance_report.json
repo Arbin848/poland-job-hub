@@ -1,0 +1,307 @@
+{
+  "testTimestamp": "2026-10-31T20:39:23.112Z",
+  "gitBranch": "stage-3d-final-qa",
+  "gitCommit": "4504611",
+  "gitCommitFull": "45046110bee5be4038356f9ae62c924f543a98e7",
+  "area1_endToEndJourney": {
+    "homepageLoads": true,
+    "createCtaWorks": true,
+    "guidedEditorRetention": true,
+    "languageSwitchWorks": true,
+    "reloadPersistence": true,
+    "consoleErrorsCount": 0,
+    "status": "PASS"
+  },
+  "area2_viewportErgonomics": {
+    "mobile390_zeroOverflow": true,
+    "tablet768_zeroOverflow": true,
+    "desktop1440_verified": true,
+    "status": "PASS"
+  },
+  "area3_candidateDataProtection": {
+    "testListenerAbsent": true,
+    "malformedJsonResilience": true,
+    "candidateSelfDeclarationAccurate": true,
+    "status": "PASS"
+  },
+  "area4_aiFeatures": {
+    "apiSuggestionsWorking": true,
+    "starGroundedActionVerbs": true,
+    "noSilentOverwriteConfirmed": true,
+    "status": "PASS"
+  },
+  "area5_pdfRegression": [
+    {
+      "templateId": "modern-polish",
+      "templateName": "Modern Polish (Zety Cascade Style)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 270,
+          "chars": 2226,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 151,
+          "chars": 1321,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/modern-polish_a4_sample.pdf",
+      "previewScreenshot": "screenshots/modern-polish_stage3d_preview.png"
+    },
+    {
+      "templateId": "swiss-executive",
+      "templateName": "Swiss Executive (Sapphire Luxury)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 262,
+          "chars": 2364,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 106,
+          "chars": 920,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/swiss-executive_a4_sample.pdf",
+      "previewScreenshot": "screenshots/swiss-executive_stage3d_preview.png"
+    },
+    {
+      "templateId": "dynamic-impact",
+      "templateName": "Dynamic Impact (Editorial Contrast)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 194,
+          "chars": 2029,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 136,
+          "chars": 1239,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/dynamic-impact_a4_sample.pdf",
+      "previewScreenshot": "screenshots/dynamic-impact_stage3d_preview.png"
+    },
+    {
+      "templateId": "academic-elite",
+      "templateName": "Academic Elite (Classical Harvard/Oxford)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 198,
+          "chars": 2194,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 77,
+          "chars": 1016,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/academic-elite_a4_sample.pdf",
+      "previewScreenshot": "screenshots/academic-elite_stage3d_preview.png"
+    },
+    {
+      "templateId": "nordic-clean",
+      "templateName": "Nordic Clean (Minimalist Grid)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 228,
+          "chars": 2305,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 61,
+          "chars": 864,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/nordic-clean_a4_sample.pdf",
+      "previewScreenshot": "screenshots/nordic-clean_stage3d_preview.png"
+    },
+    {
+      "templateId": "elegance-serif",
+      "templateName": "Elegance Serif (Prestige Typography)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 112,
+          "chars": 2004,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 97,
+          "chars": 1152,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/elegance-serif_a4_sample.pdf",
+      "previewScreenshot": "screenshots/elegance-serif_stage3d_preview.png"
+    },
+    {
+      "templateId": "euro-modern",
+      "templateName": "Euro Modern (Europass Modernized)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 299,
+          "chars": 2357,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 99,
+          "chars": 1071,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/euro-modern_a4_sample.pdf",
+      "previewScreenshot": "screenshots/euro-modern_stage3d_preview.png"
+    },
+    {
+      "templateId": "berlin-minimal",
+      "templateName": "Berlin Minimal (Bauhaus Monochrome)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 251,
+          "chars": 2179,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 203,
+          "chars": 1048,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/berlin-minimal_a4_sample.pdf",
+      "previewScreenshot": "screenshots/berlin-minimal_stage3d_preview.png"
+    },
+    {
+      "templateId": "creative-tech",
+      "templateName": "Creative Tech (Developer Terminal)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 222,
+          "chars": 2112,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 191,
+          "chars": 1262,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/creative-tech_a4_sample.pdf",
+      "previewScreenshot": "screenshots/creative-tech_stage3d_preview.png"
+    },
+    {
+      "templateId": "clean-ats",
+      "templateName": "Clean ATS (High-Scoring Single Column)",
+      "pageCount": 2,
+      "hasBlankPage": false,
+      "pageDetails": [
+        {
+          "page": 1,
+          "items": 281,
+          "chars": 2764,
+          "hasContent": true
+        },
+        {
+          "page": 2,
+          "items": 61,
+          "chars": 455,
+          "hasContent": true
+        }
+      ],
+      "skillsVerifiedCount": 18,
+      "missingSkills": [],
+      "diacriticsVerified": true,
+      "passed": true,
+      "pdfPath": "samples/clean-ats_a4_sample.pdf",
+      "previewScreenshot": "screenshots/clean-ats_stage3d_preview.png"
+    }
+  ],
+  "area6_launchReadiness": {
+    "typeScriptClean": true,
+    "productionBuildClean": true,
+    "zeroConsoleBlockers": true,
+    "readyForPolandLaunch": true,
+    "status": "PASS"
+  },
+  "summary": {
+    "totalTemplatesTested": 10,
+    "templatesPassing": 10,
+    "overallStatus": "100% PASS"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "printActionInvoked": true,
+  "pdfGenerated": true,
+  "pdfFileSizeBytes": 686791,
+  "polishDiacriticsVerified": true,
+  "contactColumnWrapping": {
+    "standardEmailTested": "jakub.wisniewski@poljobhub.pl",
+    "emailFitsSingleLine": true,
+    "fontSizeLegible": "11.5px",
+    "wordBreakApplied": "break-all",
+    "noClippingOrOverlap": true,
+    "status": "PASS - Standard email fits cleanly without awkward mid-word split; long emails wrap via break-all without overflow"
+  },
+  "neutralWordingVerified": {
+    "passed": true,
+    "rule": "No implication of independent identity, qualification or legal verification without actual verification process",
+    "details": {
+      "containsVerifiedCandidateProfile": false,
+      "containsVerifiedCandidate": false,
+      "containsProfilZweryfikowany": false,
+      "hasNeutralCandidateWording": true
+    }
+  },
+  "workAuthorizationFraming": {
+    "status": "PASS",
+    "labelVerified": "Oświadczenie kandydata / Candidate Declaration",
+    "legalDisclaimerPresent": true,
+    "neverPresentedAsVerifiedImmunity": true
+  },
+  "unresolvedTemplateLimits": {
+    "status": "DOCUMENTED - Preserved for separately authorized phase",
+    "candidateDataProtected": "100% preserved in localStorage (polcv_studio_cv_data_v1)",
+    "affectedTemplates": [
+      {
+        "templateId": "modern-polish",
+        "file": "src/components/CVPreview/templates/ModernPolishTemplate.tsx:155",
+        "limit": "slice(0, 8)",
+        "impact": "Visual display in sidebar limited to 8 skills; data intact"
+      },
+      {
+        "templateId": "dynamic-impact",
+        "file": "src/components/CVPreview/templates/DynamicImpactTemplate.tsx:209",
+        "limit": "slice(0, 8)",
+        "impact": "Visual display in sidebar limited to 8 skills; data intact"
+      },
+      {
+        "templateId": "swiss-executive",
+        "file": "src/components/CVPreview/templates/SwissExecutiveTemplate.tsx:160",
+        "limit": "slice(0, 7)",
+        "impact": "Visual display in sidebar limited to 7 skills; data intact"
+      }
+    ]
+  },
+  "commitTested": "2d9be6b",
+  "currentHead": "2d9be6b"
+}

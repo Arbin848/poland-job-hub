@@ -66,9 +66,9 @@ export const AgencyOnePagerCanvas: React.FC<Props> = ({ cv }) => {
           </div>
 
           <div className="text-right">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-extrabold text-xs shadow-xs">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>{isPl ? 'Profil Zweryfikowany' : 'Verified Candidate'}</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-300 font-extrabold text-xs shadow-xs">
+              <UserCheck className="w-4 h-4 text-slate-600" />
+              <span>{isPl ? 'Profil Kandydata' : 'Candidate Dossier'}</span>
             </div>
             <div className="text-[10px] font-mono text-slate-500 mt-1">
               REF: <strong className="text-slate-900 font-bold">{candidateCode}</strong> · {new Date().toLocaleDateString('pl-PL')}

@@ -28,7 +28,7 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
   const primary = accentColor || '#4f46e5';
 
   return (
-    <div className="bg-slate-50/50 text-slate-900 w-full min-h-[1120px] p-8 md:p-10 flex flex-col justify-between font-sans shadow-lg print:shadow-none text-[12.8px] leading-relaxed">
+    <div className="bg-slate-50/50 text-slate-900 w-full min-h-[1120px] print:min-h-0 p-8 md:p-10 flex flex-col justify-between font-sans shadow-lg print:shadow-none text-[12.8px] leading-relaxed">
       <div className="space-y-6">
         {/* Top Hero Card */}
         <header className="bg-white rounded-xl p-6 sm:p-7 border border-slate-200 shadow-2xs relative overflow-hidden">
@@ -101,7 +101,7 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
                   size={104}
                   shape="rounded-xl"
                   verified={cv.agencyBadge?.enabled}
-                  verifiedLabel={cv.agencyBadge?.agencyName || 'Verified Candidate'}
+                  verifiedLabel={cv.agencyBadge?.agencyName || (isPl ? 'Profil kandydata' : 'Candidate Profile')}
                   accentColor={primary}
                 />
               )}
@@ -141,9 +141,9 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
 
                 <div className="space-y-4">
                   {experiences.map((exp) => (
-                    <div key={exp.id} className="space-y-1.5 border-b border-slate-100 pb-4 last:border-0 last:pb-0">
+                    <div key={exp.id} className="space-y-1.5 border-b border-slate-100 pb-4 last:border-0 last:pb-0 experience-item break-inside-avoid">
                       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <h3 className="font-bold text-slate-900 text-sm">
+                        <h3 className="font-bold text-slate-900 text-sm break-words">
                           {exp.role} <span className="font-semibold text-slate-600">@ {exp.company}</span>
                         </h3>
                         <span className="text-[11px] font-mono text-slate-500 shrink-0">
@@ -157,9 +157,9 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
                       {exp.bullets && exp.bullets.length > 0 && (
                         <ul className="space-y-1 text-xs text-slate-700 pt-1">
                           {exp.bullets.map((b, bi) => (
-                            <li key={bi} className="flex items-start gap-2">
-                              <span className="text-slate-400 mt-1">▸</span>
-                              <span>{b}</span>
+                            <li key={bi} className="flex items-start gap-2 break-inside-avoid">
+                              <span className="text-slate-400 mt-1 shrink-0">▸</span>
+                              <span className="break-words">{b}</span>
                             </li>
                           ))}
                         </ul>
@@ -173,25 +173,25 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
             {/* Featured Projects Cards */}
             {vis.projects && projects && projects.length > 0 && (
               <section className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-3">
-                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5">
+                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5 break-after-avoid">
                   <FolderGit2 className="w-4 h-4" style={{ color: primary }} />
                   <span>{t.projects || (isPl ? 'Projekty & Architektura' : 'Key Projects & Architecture')}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3">
                   {projects.map((proj) => (
-                    <div key={proj.id} className="p-3.5 rounded-lg border border-slate-200 bg-slate-50/50 space-y-1.5">
+                    <div key={proj.id} className="p-3.5 rounded-lg border border-slate-200 bg-slate-50/50 space-y-1.5 project-item break-inside-avoid">
                       <div className="flex items-center justify-between">
                         <div className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                          <span>{proj.name}</span>
+                          <span className="break-words">{proj.name}</span>
                           {proj.link && (
-                            <ExternalLink className="w-3 h-3 text-slate-400" />
+                            <ExternalLink className="w-3 h-3 text-slate-400 shrink-0" />
                           )}
                         </div>
                         {proj.role && <span className="text-[10.5px] font-mono text-indigo-700 font-semibold">{proj.role}</span>}
                       </div>
                       {proj.description && (
-                        <p className="text-xs text-slate-600 leading-normal">{proj.description}</p>
+                        <p className="text-xs text-slate-600 leading-normal break-words">{proj.description}</p>
                       )}
                       {proj.techStack && proj.techStack.length > 0 && (
                         <div className="flex flex-wrap gap-1 pt-1">
@@ -217,7 +217,7 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
             {/* Technical Skills & Cloud Stack */}
             {vis.skills && (cv.technicalSkills.length > 0 || cv.toolsAndCertificates.length > 0) && (
               <section className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-3">
-                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5">
+                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5 break-after-avoid">
                   <Terminal className="w-4 h-4" style={{ color: primary }} />
                   <span>{t.skills}</span>
                 </div>
@@ -265,25 +265,25 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
             {/* Education */}
             {vis.education && educations && educations.length > 0 && (
               <section className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-3">
-                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5">
+                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5 break-after-avoid">
                   <GraduationCap className="w-4 h-4" style={{ color: primary }} />
                   <span>{t.education}</span>
                 </div>
 
                 <div className="space-y-3">
                   {educations.map((edu) => (
-                    <div key={edu.id} className="text-xs space-y-0.5">
-                      <div className="font-bold text-slate-900">
+                    <div key={edu.id} className="text-xs space-y-0.5 education-item break-inside-avoid">
+                      <div className="font-bold text-slate-900 break-words">
                         {edu.degree} · {edu.fieldOfStudy}
                       </div>
-                      <div className="text-slate-600 font-medium">
+                      <div className="text-slate-600 font-medium break-words">
                         {edu.institution} {edu.faculty && `(${edu.faculty})`}
                       </div>
                       <div className="text-[11px] font-mono text-slate-400">
                         {edu.startDate} — {edu.endDate}
                       </div>
                       {edu.gradeOrDetails && (
-                        <div className="text-[10.5px] text-slate-500 italic">{edu.gradeOrDetails}</div>
+                        <div className="text-[10.5px] text-slate-500 italic break-words">{edu.gradeOrDetails}</div>
                       )}
                     </div>
                   ))}
@@ -294,15 +294,15 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
             {/* Certifications */}
             {vis.certifications && certifications && certifications.length > 0 && (
               <section className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-2.5">
-                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5">
+                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2.5 break-after-avoid">
                   <Award className="w-4 h-4" style={{ color: primary }} />
                   <span>{t.certifications}</span>
                 </div>
 
                 <div className="space-y-2">
                   {certifications.map((c) => (
-                    <div key={c.id} className="p-2.5 rounded border border-slate-200 bg-slate-50/50 text-xs">
-                      <div className="font-bold text-slate-900">{c.name}</div>
+                    <div key={c.id} className="p-2.5 rounded border border-slate-200 bg-slate-50/50 text-xs certification-item break-inside-avoid">
+                      <div className="font-bold text-slate-900 break-words">{c.name}</div>
                       <div className="text-[10.5px] text-slate-500">{c.issuer} {c.date && `(${c.date})`}</div>
                     </div>
                   ))}
@@ -313,14 +313,14 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
             {/* Languages */}
             {vis.languages && languages && languages.length > 0 && (
               <section className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs space-y-2">
-                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2">
+                <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-2 break-after-avoid">
                   <Globe className="w-4 h-4" style={{ color: primary }} />
                   <span>{t.languages}</span>
                 </div>
 
                 <div className="space-y-1.5">
                   {languages.map((l) => (
-                    <div key={l.id} className="flex justify-between items-center text-xs">
+                    <div key={l.id} className="flex justify-between items-center text-xs break-inside-avoid">
                       <span className="font-semibold text-slate-800">{l.language}</span>
                       <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
                         {l.level}
@@ -336,7 +336,7 @@ export const CreativeTechTemplate: React.FC<Props> = ({ cv }) => {
 
       {/* RODO Clause */}
       {vis.rodo && rodo.enabled && (
-        <footer className="pt-6 border-t border-slate-200 text-[9.5px] text-slate-400 leading-tight">
+        <footer className="pt-6 border-t border-slate-200 text-[10px] text-slate-500 leading-relaxed rodo-clause-block break-inside-avoid">
           {rodo.text}
         </footer>
       )}

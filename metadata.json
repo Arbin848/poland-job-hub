@@ -1,5 +1,5 @@
 {
-  "name": "PolCV Studio - Professional CV & Resume Builder for Poland & EU",
+  "name": "PolJobHub - Professional CV & Resume Builder for Poland & EU",
   "description": "Create modern, high-impact CVs tailored to your faculty and industry that outperform standard Europass resumes. Features Polish RODO compliance, ATS optimization, bilingual support, and AI-powered enhancements.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

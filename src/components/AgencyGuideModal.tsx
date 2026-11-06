@@ -1,6 +1,7 @@
 import React from 'react';
 import { LanguageCode } from '../types/cv';
 import { BookOpen, ShieldCheck, Camera, Globe, Car, HelpCircle, FileCheck } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -9,12 +10,23 @@ interface Props {
 }
 
 export const AgencyGuideModal: React.FC<Props> = ({ isOpen, onClose, language }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8 max-h-[85vh] overflow-y-auto">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Poradnik Agencji: Jak Napisać Perfekcyjne CV w Polsce' : 'Agency Guide: Secrets of High-Impact CVs in Poland & EU'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8 max-h-[85vh] overflow-y-auto"
+      >
         <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-slate-800" />
@@ -22,7 +34,12 @@ export const AgencyGuideModal: React.FC<Props> = ({ isOpen, onClose, language })
               {isPl ? 'Poradnik Agencji: Jak Napisać Perfekcyjne CV w Polsce' : 'Agency Guide: Secrets of High-Impact CVs in Poland & EU'}
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 font-bold">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
+            className="p-1 text-slate-400 hover:text-slate-600 font-bold rounded"
+          >
             ✕
           </button>
         </div>

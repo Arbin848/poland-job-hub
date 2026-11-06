@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-10-25T19:02:12.539Z",
+  "experience": "PolJobHub V5 Signature Experience",
+  "verificationScope": {
+    "templatesTested": 10,
+    "mobileWidthsTested": [
+      360,
+      390,
+      430
+    ],
+    "referencePdfGenerated": "/evidence/PolJobHub_V5_TwoPage_Reference.pdf"
+  },
+  "tenTemplateResults": [
+    {
+      "templateId": "modern-polish",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "clean-ats",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "euro-modern",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "nordic-clean",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "academic-elite",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "dynamic-impact",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "swiss-executive",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "creative-tech",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "berlin-minimal",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    },
+    {
+      "templateId": "elegance-serif",
+      "browserPreviewVerified": "PASS",
+      "actualPrintedPdfVerified": "PASS",
+      "scrollHeightPx": 2094,
+      "detectedPages": 2,
+      "polishDiacriticsPreserved": "PASS",
+      "headingIntegrity": "PASS",
+      "pdfSizeBytes": 741624
+    }
+  ],
+  "mobileAuditResults": [
+    {
+      "widthPx": 360,
+      "homepageOverflow": "PASS (0px)",
+      "editorOverflow": "PASS (0px)",
+      "drawerMenuOpensAndCloses": "PASS",
+      "bottomBarClearanceSafe": "PASS (pb-28 enforced)",
+      "previewModalOperational": "FAIL"
+    },
+    {
+      "widthPx": 390,
+      "homepageOverflow": "PASS (0px)",
+      "editorOverflow": "PASS (0px)",
+      "drawerMenuOpensAndCloses": "PASS",
+      "bottomBarClearanceSafe": "PASS (pb-28 enforced)",
+      "previewModalOperational": "FAIL"
+    },
+    {
+      "widthPx": 430,
+      "homepageOverflow": "PASS (0px)",
+      "editorOverflow": "PASS (0px)",
+      "drawerMenuOpensAndCloses": "PASS",
+      "bottomBarClearanceSafe": "PASS (pb-28 enforced)",
+      "previewModalOperational": "FAIL"
+    }
+  ],
+  "accessibilityAudit": {
+    "prefersReducedMotionCompliance": "PASS (3D tilt neutralized, transitions simplified)",
+    "polishDiacriticsIntegrity": "PASS (All 9 Polish characters ą, ć, ę, ł, ń, ó, ś, ź, ż rendered with full UTF-8 fidelity)",
+    "headingBreakProtection": "PASS (break-inside: avoid and break-after: avoid enforced)",
+    "redBoundaryLineRemoved": "PASS (Dashed red line crossing content replaced with clean multipage gutter)"
+  }
+}

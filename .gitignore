@@ -11,4 +11,11 @@ coverage/
 *.db
 *.db-shm
 *.db-wal
-data/
+/data/
+review_pkg_staging/
+*.tar.gz
+*.zip
+*.webm
+*.bundle
+-e downloads/
+my_folder/

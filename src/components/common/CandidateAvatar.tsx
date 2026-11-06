@@ -49,7 +49,7 @@ export const CandidateAvatar: React.FC<Props> = ({
         {showImage ? (
           <img
             src={photoUrl}
-            alt={name || 'Candidate'}
+            alt={name ? `${name} – zdjęcie` : 'Kandydat – zdjęcie'}
             referrerPolicy="no-referrer"
             onError={() => setHasError(true)}
             className="w-full h-full object-cover"
@@ -74,7 +74,7 @@ export const CandidateAvatar: React.FC<Props> = ({
       {verified && (
         <span
           className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-1 rounded-full shadow-xs border-2 border-white flex items-center justify-center"
-          title={verifiedLabel || 'Verified Candidate'}
+          title={verifiedLabel || 'Profil Kandydata'}
         >
           <ShieldCheck className="w-3.5 h-3.5" />
         </span>

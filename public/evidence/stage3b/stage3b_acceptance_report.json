@@ -1,0 +1,83 @@
+{
+  "gitBranch": "stage-3b-guided-editor",
+  "commitTested": "2d9be6b",
+  "commitTestedFull": "2d9be6bde1e1a22d0b9db22085297be1d51f99ae",
+  "currentHead": "2d9be6b",
+  "currentHeadFull": "2d9be6bde1e1a22d0b9db22085297be1d51f99ae",
+  "timestamp": "2026-10-28T19:18:50.578Z",
+  "allPassed": true,
+  "results": [
+    {
+      "testNumber": 1,
+      "name": "Opening a new guided CV (route #/guided-editor)",
+      "passed": true,
+      "details": "Step 1 visible: true, FullName input: true"
+    },
+    {
+      "testNumber": 2,
+      "name": "Opening existing saved CV without data loss",
+      "passed": true,
+      "details": "Loaded candidate name: \"Aleksandra Dąbrowska\" (expected \"Aleksandra Dąbrowska\")"
+    },
+    {
+      "testNumber": 3,
+      "name": "Completing all five workflow steps",
+      "passed": true,
+      "details": "Steps 1-5 displayed properly with candidate data"
+    },
+    {
+      "testNumber": 4,
+      "name": "Navigating backward and forward without data loss",
+      "passed": true,
+      "details": "Backward navigation to Step 4 succeeded"
+    },
+    {
+      "testNumber": 5,
+      "name": "Saving and reloading candidate information (localStorage polcv_studio_cv_data_v1)",
+      "passed": true,
+      "details": "Saved location in localStorage: \"Kraków, Polska (Praca zdalna)\""
+    },
+    {
+      "testNumber": 6,
+      "name": "Bidirectional switching between guided and advanced editors without data loss",
+      "passed": true,
+      "details": "Guided -> Advanced: URL=true, data intact=true; Advanced -> Guided: URL=true, data intact=true"
+    },
+    {
+      "testNumber": 7,
+      "name": "Selecting all ten templates synchronized with state",
+      "passed": true,
+      "details": "All 10 production templates present in template picker"
+    },
+    {
+      "testNumber": 8,
+      "name": "Switching PL/EN language synchronization",
+      "passed": true,
+      "details": "Document language active: \"en\""
+    },
+    {
+      "testNumber": 9,
+      "name": "Using AI suggestions with explicit candidate acceptance & rejection",
+      "passed": true,
+      "details": "AI Assistant: true, Generated: 3 suggestions, Reject action verified: true, Accept insertion verified: true"
+    },
+    {
+      "testNumber": 10,
+      "name": "Triggering existing PDF print export (window.print())",
+      "passed": true,
+      "details": "window.print() invoked on export button click: true"
+    },
+    {
+      "testNumber": 11,
+      "name": "Mobile responsiveness (360, 390, 430, 768, 1440px) with 0px horizontal overflow",
+      "passed": true,
+      "details": "All 5 viewports passed with 0 horizontal overflow and accessible navigation"
+    },
+    {
+      "testNumber": 12,
+      "name": "Homepage preservation and default CTA points to #/editor (not prematurely redirected)",
+      "passed": true,
+      "details": "Homepage CTA destination: \"http://localhost:3000/#/editor\" (verified pointing to #/editor)"
+    }
+  ]
+}

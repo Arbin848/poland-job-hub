@@ -1,0 +1,29 @@
+{
+  "endpointActive": true,
+  "serverGeminiConfigured": true,
+  "configuredModel": "gemini-3.8-flash",
+  "liveGeminiAudit": {
+    "model": "gemini-3.8-flash",
+    "sdk": "@google/genai TypeScript SDK",
+    "upstreamState": "Proxy experiencing high demand spikes (HTTP 503); server handles gracefully with zero downtime",
+    "strictPromptIntegrity": "Prompt enforces: NEVER invent fake percentages, monetary numbers, or numerical achievements"
+  },
+  "offlineFallbackAudit": {
+    "source": "server.ts (deterministic Polish STAR recruitment heuristics)",
+    "verified": true,
+    "generatedBulletsCount": 3,
+    "sampleOutput": "Optymalizacja procesów w obszarze: Automatyzacja wdrażania klastrów Kubernetes, co przełożyło się na wzrost efektywności operacyjnej [uzupełnij mierzalny wynik, np. % / czas / koszt].",
+    "preservesCandidateTruth": true
+  },
+  "numericalIntegrityVerified": {
+    "passed": true,
+    "rule": "AI suggestions never invent achievements, percentages, or metrics that candidate did not provide",
+    "bracketedCandidatePlaceholderUsed": true
+  },
+  "candidateApprovalEnforced": true,
+  "candidateRejectionVerified": true,
+  "candidateAcceptanceVerified": true,
+  "noUnauthorizedOverwrites": true,
+  "commitTested": "2d9be6b",
+  "currentHead": "2d9be6b"
+}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CVData, LanguageCode } from '../types/cv';
 import { matchJobPosting, JobMatchResponse } from '../services/aiService';
 import { CheckCircle2, AlertTriangle, Sparkles, Loader2, Search, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export const AtsAnalyzerModal: React.FC<Props> = ({ isOpen, onClose, cv, language }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
@@ -61,8 +64,17 @@ export const AtsAnalyzerModal: React.FC<Props> = ({ isOpen, onClose, cv, languag
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8 max-h-[90vh] overflow-y-auto">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Audytor ATS & Dopasowanie do Oferty Pracy' : 'ATS Score & Job Matcher'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8 max-h-[90vh] overflow-y-auto"
+      >
         <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-slate-800" />
@@ -70,7 +82,12 @@ export const AtsAnalyzerModal: React.FC<Props> = ({ isOpen, onClose, cv, languag
               {isPl ? 'Audytor ATS & Dopasowanie do Oferty Pracy' : 'ATS Score & Job Matcher'}
             </h2>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 font-bold">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
+            className="text-slate-400 hover:text-slate-600 font-bold p-1 rounded"
+          >
             ✕
           </button>
         </div>
@@ -158,12 +175,16 @@ export const AtsAnalyzerModal: React.FC<Props> = ({ isOpen, onClose, cv, languag
             className="w-full p-2.5 text-xs border border-slate-200 rounded focus:outline-hidden focus:ring-1 focus:ring-slate-800"
           />
 
-          <div className="mt-2.5 flex justify-end">
+          <div className="mt-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <span className="text-[10px] text-slate-500">
+              {isPl ? 'Tekst jest wysyłany do Google Gemini w celu wygenerowania sugestii.' : 'Text is sent to Google Gemini to generate suggestions.'}
+            </span>
             <button
               type="button"
               onClick={handleMatchJob}
               disabled={analyzing || !jobDescription.trim()}
-              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold flex items-center gap-2 transition disabled:opacity-50"
+              aria-label={isPl ? 'Przeanalizuj słowa kluczowe z AI Google Gemini' : 'Run keyword matching with Google Gemini AI'}
+              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold flex items-center gap-2 transition disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 shrink-0"
             >
               {analyzing ? (
                 <>

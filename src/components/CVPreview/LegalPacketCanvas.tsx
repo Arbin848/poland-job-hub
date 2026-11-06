@@ -66,13 +66,13 @@ export const LegalPacketCanvas: React.FC<Props> = ({ cv }) => {
         <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2">
           <h2 className="font-extrabold text-xs text-slate-900 uppercase tracking-wider flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>1. Podstawa Prawna Wykonywania Pracy w Rzeczypospolitej Polskiej</span>
+            <span>1. Oświadczenie Kandydata o Tytule Pobytowym i Prawie do Pracy w RP</span>
           </h2>
           <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-lg text-emerald-950 font-medium text-xs leading-relaxed">
             {personalInfo.workEligibility || 'PESEL ze statusem UKR / Obywatelstwo UE / Karta Pobytu z prawem do pracy.'}
           </div>
           <p className="text-[11px] text-slate-600">
-            Zgodnie z przepisami prawa polskiego (Kodeks Pracy, Ustawa o promocji zatrudnienia i instytucjach rynku pracy oraz właściwe przepisy szczególne), cudzoziemiec posiada legalny tytuł pobytowy uprawniający do podjęcia i wykonywania pracy zarobkowej na terytorium RP.
+            Poniższy wpis stanowi oświadczenie własne kandydata. Pracodawca ma ustawowy obowiązek zweryfikowania oryginalnych dokumentów pobytowych (paszport, wiza, karta pobytu, zaświadczenie o nadaniu PESEL ze statusem UKR) przed dopuszczeniem pracownika do pracy.
           </p>
         </div>
 
@@ -89,8 +89,8 @@ export const LegalPacketCanvas: React.FC<Props> = ({ cv }) => {
                 detail: 'Przed faktycznym dopuszczeniem pracownika do pracy, sporządzonej w języku polskim oraz przetłumaczonej na język zrozumiały dla cudzoziemca.'
               },
               {
-                title: 'Powiadomienie do PUP w terminie 14 dni (praca.gov.pl)',
-                detail: 'Dla obywateli Ukrainy podlegających specustawie – zgłoszenie elektroniczne bez opłat urzędowych w ciągu 14 dni od dnia podjęcia pracy.'
+                title: 'Powiadomienie do PUP w terminie 7 dni od dnia rozpoczęcia pracy (praca.gov.pl)',
+                detail: 'dla obywateli Ukrainy korzystających z ochrony czasowej (art. 5a ustawy o warunkach dopuszczalności powierzania pracy cudzoziemcom, od 5 marca 2026 r.) – zgłoszenie elektroniczne przez praca.gov.pl, bez opłat'
               },
               {
                 title: 'Zgłoszenie do ZUS (Formularz ZUS ZUA / ZZA)',

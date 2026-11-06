@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TemplateId, LanguageCode, CVData, FacultyCategory } from '../types/cv';
-import { PRESET_PROFILES } from '../data/presets';
+import { PRESET_PROFILES, DEFAULT_CV } from '../data/presets';
+import { InteractiveGallery } from './InteractiveGallery';
 import {
   Layout,
   Sparkles,
@@ -20,6 +21,7 @@ import {
   Eye,
   Zap
 } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -28,6 +30,7 @@ interface Props {
   onSelectTemplate: (tpl: TemplateId) => void;
   onLoadPreset: (presetData: Partial<CVData>) => void;
   language: LanguageCode;
+  cv?: CVData;
 }
 
 export const TemplateGalleryModal: React.FC<Props> = ({
@@ -36,12 +39,15 @@ export const TemplateGalleryModal: React.FC<Props> = ({
   selectedTemplate,
   onSelectTemplate,
   onLoadPreset,
-  language
+  language,
+  cv
 }) => {
-  if (!isOpen) return null;
-  const isPl = language === 'pl';
   const [activeTab, setActiveTab] = useState<'templates' | 'samples'>('templates');
   const [filter, setFilter] = useState<string>('all');
+  useEscapeKey(onClose, isOpen);
+
+  if (!isOpen) return null;
+  const isPl = language === 'pl';
 
   const templatesList: {
     id: TemplateId;
@@ -508,22 +514,31 @@ export const TemplateGalleryModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Galeria Szablonów & Przykładowych CV' : 'CV Template Gallery & Industry Samples'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#F8F9FF] rounded-2xl shadow-2xl max-w-6xl w-full border border-[#E5E8F3] overflow-hidden my-auto max-h-[94vh] flex flex-col"
+      >
         {/* Gallery Header */}
-        <div className="p-4 sm:p-5 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div className="p-4 sm:p-5 bg-white border-b border-[#E5E8F3] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-400 shrink-0">
-              <Sparkles className="w-5 h-5 text-indigo-300" />
+            <div className="w-10 h-10 rounded-xl bg-[#6250F4]/10 border border-[#6250F4]/20 flex items-center justify-center text-[#6250F4] shrink-0">
+              <Sparkles className="w-5 h-5 text-[#6250F4]" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-base sm:text-lg font-extrabold text-[#18233F] flex items-center gap-2">
                 <span>{isPl ? 'Galeria Szablonów & Przykładowych CV' : 'CV Template Gallery & Industry Samples'}</span>
-                <span className="text-[10px] font-mono bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full border border-indigo-400/20">
+                <span className="text-[10px] font-mono font-bold bg-[#6250F4]/10 text-[#6250F4] px-2 py-0.5 rounded-full">
                   Poland & EU Standard
                 </span>
               </h2>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-[#75819C] mt-0.5 font-medium">
                 {isPl
                   ? 'Wybierz profesjonalny styl wizualny zaakceptowany przez rekruterów lub wczytaj gotowe przykładowe CV ze sprawdzonymi obowiązkami.'
                   : 'Select an executive visual template or load a pre-written gold-standard resume for your profession.'}
@@ -533,22 +548,23 @@ export const TemplateGalleryModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+            aria-label={isPl ? 'Zamknij' : 'Close'}
+            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition cursor-pointer"
           >
             ✕
           </button>
         </div>
 
         {/* Tab Switcher: Templates vs Industry Samples */}
-        <div className="p-3 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center border border-slate-300 rounded-lg p-0.5 bg-white text-xs font-bold shadow-xs">
+        <div className="p-3 bg-[#F8F9FF] border-b border-[#E5E8F3] flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center border border-[#E5E8F3] rounded-xl p-1 bg-white text-xs font-bold shadow-xs">
             <button
               type="button"
               onClick={() => setActiveTab('templates')}
-              className={`px-3.5 py-1.5 rounded-md transition flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'templates'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#6250F4] text-white shadow-xs'
+                  : 'text-[#75819C] hover:text-[#18233F]'
               }`}
             >
               <Layout className="w-4 h-4" />
@@ -557,158 +573,29 @@ export const TemplateGalleryModal: React.FC<Props> = ({
             <button
               type="button"
               onClick={() => setActiveTab('samples')}
-              className={`px-3.5 py-1.5 rounded-md transition flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'samples'
-                  ? 'bg-slate-900 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#6250F4] text-white shadow-xs'
+                  : 'text-[#75819C] hover:text-[#18233F]'
               }`}
             >
-              <Briefcase className="w-4 h-4 text-indigo-600" />
+              <Briefcase className="w-4 h-4" />
               <span>{isPl ? '2. Gotowe Przykłady Branżowe (8 Wzorców)' : '2. Ready Industry Samples (8 Fields)'}</span>
             </button>
           </div>
-
-          {activeTab === 'templates' && (
-            <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-400 font-medium hidden sm:inline">{isPl ? 'Kategoria:' : 'Category:'}</span>
-              <button
-                type="button"
-                onClick={() => setFilter('all')}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition ${
-                  filter === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {isPl ? 'Wszystkie' : 'All'}
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter('executive')}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition ${
-                  filter === 'executive' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Executive
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter('tech')}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition ${
-                  filter === 'tech' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Tech & IT
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter('classic')}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition ${
-                  filter === 'classic' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Classic / EU
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter('ats')}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition ${
-                  filter === 'ats' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                ATS 100%
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Tab 1: Visual Templates Gallery */}
         {activeTab === 'templates' && (
-          <div className="p-4 sm:p-6 overflow-y-auto flex-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredTemplates.map((tpl) => {
-                const isSelected = selectedTemplate === tpl.id;
-                return (
-                  <div
-                    key={tpl.id}
-                    className={`p-4 rounded-xl border-2 transition flex flex-col justify-between group bg-white shadow-xs hover:shadow-md ${
-                      isSelected
-                        ? 'border-indigo-600 ring-2 ring-indigo-500/20 bg-indigo-50/15'
-                        : 'border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    <div>
-                      {/* Badge bar */}
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                          {tpl.layoutType}
-                        </span>
-                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                          <span>{tpl.atsRating}</span>
-                        </span>
-                      </div>
-
-                      {/* Miniature Visual Layout Wireframe */}
-                      <div
-                        className="mb-3 cursor-pointer transition transform hover:scale-[1.01]"
-                        onClick={() => {
-                          onSelectTemplate(tpl.id);
-                        }}
-                      >
-                        {renderVisualCard(tpl.previewType, tpl.accent)}
-                      </div>
-
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800">
-                          {isPl ? tpl.tagPl : tpl.tagEn}
-                        </span>
-                      </div>
-
-                      <h3 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 leading-snug">
-                        {isPl ? tpl.namePl : tpl.nameEn}
-                      </h3>
-
-                      <div className="text-[11px] font-semibold text-slate-600 mt-1 mb-1.5">
-                        <span className="text-slate-400">{isPl ? 'Dla: ' : 'Best for: '}</span>
-                        {isPl ? tpl.bestForPl : tpl.bestForEn}
-                      </div>
-
-                      <p className="text-xs text-slate-500 leading-relaxed">
-                        {isPl ? tpl.descPl : tpl.descEn}
-                      </p>
-                    </div>
-
-                    <div className="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-[11px] font-medium text-slate-400">
-                        {isSelected ? (
-                          <span className="text-emerald-700 font-bold flex items-center gap-1">
-                            <Check className="w-3.5 h-3.5" />
-                            {isPl ? 'Aktualnie Wybrany' : 'Currently Active'}
-                          </span>
-                        ) : (
-                          isPl ? 'Kliknij, aby zastosować' : 'Click to apply'
-                        )}
-                      </span>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onSelectTemplate(tpl.id);
-                          onClose();
-                        }}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition flex items-center gap-1 ${
-                          isSelected
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-slate-900 hover:bg-slate-800 text-white shadow-xs'
-                        }`}
-                      >
-                        <span>{isSelected ? (isPl ? 'Wybrany' : 'Selected') : (isPl ? 'Wybierz Styl' : 'Use Template')}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          <div className="overflow-y-auto flex-1 bg-[#F8F9FF]">
+            <InteractiveGallery
+              selectedTemplate={selectedTemplate}
+              onSelectTemplate={onSelectTemplate}
+              cv={cv || DEFAULT_CV}
+              language={language}
+              onContinueToEditor={onClose}
+              isModalView={true}
+            />
           </div>
         )}
 
@@ -810,8 +697,8 @@ export const TemplateGalleryModal: React.FC<Props> = ({
         )}
 
         {/* Modal Footer */}
-        <div className="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 shrink-0">
-          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+        <div className="p-3.5 sm:p-4 bg-white border-t border-[#E5E8F3] flex items-center justify-between text-xs text-[#75819C] shrink-0">
+          <div className="flex items-center gap-1.5 text-[#18233F] font-semibold">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>{isPl ? 'Wszystkie szablony są w 100% zoptymalizowane pod druk A4 i systemy ATS' : '100% A4 Print & ATS compliant'}</span>
           </div>
@@ -819,7 +706,7 @@ export const TemplateGalleryModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg transition"
+            className="px-5 py-2 bg-[#6250F4] hover:bg-[#5240e3] text-white font-bold rounded-xl transition shadow-sm cursor-pointer"
           >
             {isPl ? 'Gotowe / Zamknij' : 'Done / Close'}
           </button>

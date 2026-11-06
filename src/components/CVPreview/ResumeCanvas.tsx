@@ -17,9 +17,11 @@ import { LegalPacketCanvas } from './LegalPacketCanvas';
 interface Props {
   cv: CVData;
   zoom: number;
+  isThumbnail?: boolean;
 }
 
-export const ResumeCanvas: React.FC<Props> = ({ cv, zoom }) => {
+export const ResumeCanvas: React.FC<Props> = ({ cv, zoom, isThumbnail = false }) => {
+  const isPl = cv.language === 'pl';
   const renderTemplate = () => {
     if (cv.activeDocument === 'cover-letter') {
       return <CoverLetterCanvas cv={cv} />;
@@ -72,36 +74,54 @@ export const ResumeCanvas: React.FC<Props> = ({ cv, zoom }) => {
   }[cv.fontFamily || 'jakarta'];
 
   return (
-    <div className="flex justify-center items-start p-2 sm:p-6 w-full overflow-x-auto min-h-full">
+    <div className={`flex ${isThumbnail ? 'p-0 justify-start items-start' : 'justify-center items-start p-2 sm:p-6'} w-full overflow-x-auto min-h-full`}>
       <div
         id="cv-printable-canvas"
         style={{
           transform: `scale(${zoom})`,
-          transformOrigin: 'top center',
+          transformOrigin: isThumbnail ? 'top left' : 'top center',
           transition: 'transform 0.15s ease-out',
         }}
-        className={`w-full max-w-[820px] bg-white shadow-2xl shadow-slate-950/20 rounded-xs ring-1 ring-slate-900/10 print:shadow-none print:ring-0 print:transform-none print:m-0 print:w-full print:max-w-none relative ${fontFamilyStyle} ${fontScaleStyle}`}
+        className={`w-full max-w-[820px] bg-white ${isThumbnail ? 'shadow-none ring-0' : 'shadow-2xl shadow-slate-950/20 rounded-xs ring-1 ring-slate-900/10'} print:shadow-none print:ring-0 print:transform-none print:m-0 print:w-full print:max-w-none relative ${fontFamilyStyle} ${fontScaleStyle}`}
       >
+        {/* Optional Work Permit Verification Header Strip across all templates */}
+        {cv.personalInfo.showWorkPermitBadge && cv.personalInfo.workEligibility && (
+          <div className="bg-emerald-50/90 text-emerald-900 border-b border-emerald-200 px-6 py-1.5 text-[11px] font-semibold flex items-center justify-between print:bg-emerald-50 print:text-emerald-900">
+            <span className="flex items-center gap-1.5">
+              <span className="text-emerald-600 font-bold">✓</span>
+              <span>
+                {cv.language === 'pl' ? 'Oświadczenie kandydata o prawie do pracy w RP:' : 'Work authorization (candidate self-declaration):'}{' '}
+                {cv.personalInfo.workEligibility}
+              </span>
+            </span>
+            <span className="text-[9.5px] uppercase tracking-wider font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+              {cv.language === 'pl' ? 'Deklaracja kandydata' : 'Candidate Declaration'}
+            </span>
+          </div>
+        )}
+
         {renderTemplate()}
 
-        {/* Visual A4 Page 1 Break Indicator (Only on screen, hidden in print) */}
-        <div
-          className="absolute left-0 right-0 border-b border-dashed border-rose-400 pointer-events-none print:hidden flex items-center justify-between px-4 z-20"
-          style={{ top: '1122px' }}
-        >
-          <span className="bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-mono font-bold px-2 py-0.5 rounded shadow-xs -translate-y-1/2">
-            {cv.language === 'pl' ? '--- Granica 1. strony A4 (297 mm) ---' : '--- End of Page 1 A4 (297 mm) ---'}
-          </span>
-          <span className="text-[10px] text-rose-500 font-mono -translate-y-1/2 bg-white px-1 hidden sm:inline">
-            {cv.language === 'pl' ? 'Druga strona poniżej' : 'Page 2 starts below'}
-          </span>
-        </div>
+        {/* Visual A4 Page 1 Break Indicator (Only on screen, hidden in print and thumbnails) */}
+        {!isThumbnail && (
+          <div
+            className="absolute left-0 right-0 border-b border-dashed border-rose-400 pointer-events-none print:hidden flex items-center justify-between px-4 z-20"
+            style={{ top: '1122px' }}
+          >
+            <span className="bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-mono font-bold px-2 py-0.5 rounded shadow-xs -translate-y-1/2">
+              {cv.language === 'pl' ? '--- Granica 1. strony A4 (297 mm) ---' : '--- End of Page 1 A4 (297 mm) ---'}
+            </span>
+            <span className="text-[10px] text-rose-500 font-mono -translate-y-1/2 bg-white px-1 hidden sm:inline">
+              {cv.language === 'pl' ? 'Druga strona poniżej' : 'Page 2 starts below'}
+            </span>
+          </div>
+        )}
 
-        {/* Optional Agency Verification Watermark / Badge */}
+        {/* Document reference footer if agency attribution enabled */}
         {cv.agencyBadge?.enabled && (
           <div className="px-8 pb-3 pt-1 text-[9px] text-slate-400 flex items-center justify-between border-t border-slate-100 print:text-[8px] print:text-slate-400">
-            <span>Verified Candidate Profile · {cv.agencyBadge.agencyName}</span>
-            <span className="font-mono">ID: {cv.id.slice(-8).toUpperCase()}</span>
+            <span>{isPl ? 'Dokument aplikacyjny kandydata' : 'Candidate Application Profile'}{cv.agencyBadge.agencyName ? ` · ${cv.agencyBadge.agencyName}` : ''}</span>
+            <span className="font-mono">{isPl ? 'Nr ref. dokumentu' : 'Doc Ref'}: {cv.id.slice(-8).toUpperCase()}</span>
           </div>
         )}
       </div>

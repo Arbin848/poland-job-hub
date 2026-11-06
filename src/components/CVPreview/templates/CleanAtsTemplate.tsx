@@ -26,7 +26,7 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
   const primary = accentColor || '#0f766e';
 
   return (
-    <div className="bg-white text-slate-900 w-full min-h-[1120px] p-8 md:p-12 flex flex-col justify-between text-[13px] leading-relaxed font-sans shadow-lg print:shadow-none border-t-4"
+    <div className="bg-white text-slate-900 w-full min-h-[1120px] print:min-h-0 p-8 md:p-12 flex flex-col justify-between text-[13px] leading-relaxed font-sans shadow-lg print:shadow-none border-t-4"
          style={{ borderTopColor: primary }}>
       <div className="space-y-6">
         {/* ATS Master Header */}
@@ -40,9 +40,8 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
             </p>
 
             {cv.agencyBadge?.enabled && (
-              <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                <span>{cv.agencyBadge.agencyName || 'Verified Candidate'}</span>
+              <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-800 border border-slate-300">
+                <span>{cv.agencyBadge.agencyName || (isPl ? 'Profil kandydata' : 'Candidate Profile')}</span>
               </div>
             )}
 
@@ -114,12 +113,12 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
             </h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
-                <div key={exp.id} className="space-y-1">
+                <div key={exp.id} className="space-y-1 experience-item break-inside-avoid">
                   <div className="flex justify-between items-baseline flex-wrap gap-1">
-                    <span className="font-bold text-slate-900 text-[13.5px]">
+                    <span className="font-bold text-slate-900 text-[13.5px] break-words">
                       {exp.role} <span className="text-slate-600 font-semibold">— {exp.company}</span>
                     </span>
-                    <span className="text-xs font-mono text-slate-500 font-medium tabular-nums">
+                    <span className="text-xs font-mono text-slate-500 font-medium tabular-nums shrink-0">
                       {exp.startDate} — {exp.current ? t.present : (exp.endDate || t.present)}
                     </span>
                   </div>
@@ -130,7 +129,7 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
                   {exp.bullets && exp.bullets.length > 0 && (
                     <ul className="list-disc list-outside ml-4 space-y-1 text-slate-700 text-[12.2px] pt-1">
                       {exp.bullets.map((b, idx) => (
-                        <li key={idx} className="leading-snug">{b}</li>
+                        <li key={idx} className="leading-snug break-inside-avoid break-words">{b}</li>
                       ))}
                     </ul>
                   )}
@@ -143,19 +142,19 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
         {/* Featured Projects */}
         {vis.projects && projects && projects.length > 0 && (
           <section className="space-y-2.5">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-300 pb-1 flex items-center justify-between"
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-300 pb-1 flex items-center justify-between break-after-avoid"
                 style={{ color: primary }}>
               <span>{t.projects}</span>
               <span className="text-[10px] font-mono text-slate-400 font-normal">PORTFOLIO</span>
             </h2>
             <div className="space-y-2.5 text-xs">
               {projects.map((proj) => (
-                <div key={proj.id} className="p-2.5 bg-slate-50 rounded border border-slate-200/80">
+                <div key={proj.id} className="p-2.5 bg-slate-50 rounded border border-slate-200/80 project-item break-inside-avoid">
                   <div className="flex justify-between items-baseline">
-                    <span className="font-bold text-slate-900 text-[12px]">{proj.name}</span>
+                    <span className="font-bold text-slate-900 text-[12px] break-words">{proj.name}</span>
                     {proj.role && <span className="text-slate-500 font-mono text-[10.5px]">{proj.role}</span>}
                   </div>
-                  <p className="text-slate-700 mt-0.5 leading-snug">{proj.description}</p>
+                  <p className="text-slate-700 mt-0.5 leading-snug break-words">{proj.description}</p>
                   {proj.techStack && proj.techStack.length > 0 && (
                     <div className="text-[10.5px] text-slate-600 mt-1 flex gap-1 flex-wrap">
                       {proj.techStack.map((tech, ti) => (
@@ -175,16 +174,16 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-1">
           {vis.education && educations && educations.length > 0 && (
             <section className="space-y-2">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-300 pb-1"
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-300 pb-1 break-after-avoid"
                   style={{ color: primary }}>
                 {t.education}
               </h2>
               <div className="space-y-2 text-xs">
                 {educations.map((edu) => (
-                  <div key={edu.id}>
-                    <div className="font-bold text-slate-900">{edu.degree} {edu.fieldOfStudy && `— ${edu.fieldOfStudy}`}</div>
-                    <div className="text-slate-600">{edu.institution}</div>
-                    <div className="text-[10.5px] font-mono text-slate-400">{edu.startDate} — {edu.endDate || t.present}</div>
+                  <div key={edu.id} className="education-item break-inside-avoid">
+                    <div className="font-bold text-slate-900 break-words">{edu.degree} {edu.fieldOfStudy && `— ${edu.fieldOfStudy}`}</div>
+                    <div className="text-slate-600 break-words">{edu.institution}</div>
+                    <div className="text-[10.5px] font-mono text-slate-500">{edu.startDate} — {edu.endDate || t.present}</div>
                   </div>
                 ))}
               </div>
@@ -193,13 +192,13 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
 
           {vis.languages && languages && languages.length > 0 && (
             <section className="space-y-2">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-300 pb-1"
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-300 pb-1 break-after-avoid"
                   style={{ color: primary }}>
                 {t.languages}
               </h2>
               <div className="space-y-1.5 text-xs">
                 {languages.map((l) => (
-                  <div key={l.id} className="flex justify-between items-center border-b border-slate-100 pb-1">
+                  <div key={l.id} className="flex justify-between items-center border-b border-slate-100 pb-1 break-inside-avoid">
                     <span className="font-semibold text-slate-800">{l.language}</span>
                     <span className="font-mono text-[11px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">
                       {l.level}
@@ -214,7 +213,7 @@ export const CleanAtsTemplate: React.FC<Props> = ({ cv }) => {
 
       {/* RODO Legal Clause Footer */}
       {vis.rodo && rodo.enabled && (
-        <footer className="mt-8 pt-4 border-t border-slate-300 text-[9.5px] text-slate-400 leading-tight">
+        <footer className="mt-8 pt-4 border-t border-slate-300 text-[10px] text-slate-500 leading-relaxed rodo-clause-block break-inside-avoid">
           {rodo.text}
         </footer>
       )}

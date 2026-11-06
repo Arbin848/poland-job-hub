@@ -14,6 +14,7 @@ import {
   X,
   Box
 } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -52,6 +53,8 @@ export const MobileActionSheet: React.FC<Props> = ({
   onOpenCandidateSuccess,
   onToggle3D
 }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
@@ -145,8 +148,17 @@ export const MobileActionSheet: React.FC<Props> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="bg-white rounded-t-2xl sm:rounded-xl shadow-2xl max-w-lg w-full max-h-[85vh] flex flex-col border border-slate-200 animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Narzędzia i Opcje PolCV' : 'Tools & Quick Actions'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-t-2xl sm:rounded-xl shadow-2xl max-w-lg w-full max-h-[85vh] flex flex-col border border-slate-200 animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95"
+      >
         <div className="flex items-center justify-between p-4 border-b border-slate-200">
           <div>
             <h2 className="text-sm font-bold text-slate-900">
@@ -157,7 +169,9 @@ export const MobileActionSheet: React.FC<Props> = ({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
             className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg text-sm font-bold"
           >
             <X className="w-5 h-5" />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { TemplateId, LanguageCode } from '../types/cv';
 import { Check, Layout, Sparkles } from 'lucide-react';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +18,8 @@ export const TemplatePickerModal: React.FC<Props> = ({
   onSelect,
   language
 }) => {
+  useEscapeKey(onClose, isOpen);
+
   if (!isOpen) return null;
   const isPl = language === 'pl';
 
@@ -144,8 +147,17 @@ export const TemplatePickerModal: React.FC<Props> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full p-5 sm:p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isPl ? 'Wybierz Styl i Szablon Twojego CV' : 'Choose Your CV Template Style'}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl shadow-2xl max-w-4xl w-full p-5 sm:p-6 border border-slate-200 animate-in fade-in zoom-in-95 my-8"
+      >
         <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
             <Layout className="w-5 h-5 text-slate-800" />
@@ -153,7 +165,12 @@ export const TemplatePickerModal: React.FC<Props> = ({
               {isPl ? 'Wybierz Styl i Szablon Twojego CV' : 'Choose Your CV Template Style'}
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 font-bold">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={isPl ? 'Zamknij' : 'Close'}
+            className="p-1 text-slate-400 hover:text-slate-600 font-bold rounded"
+          >
             ✕
           </button>
         </div>

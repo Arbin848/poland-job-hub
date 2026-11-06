@@ -20,6 +20,7 @@ export const CoverLetterSection: React.FC<Props> = ({
   const isPl = language === 'pl';
   const [generating, setGenerating] = useState(false);
   const [tone, setTone] = useState<'formal' | 'dynamic' | 'entry'>('formal');
+  const [isFallback, setIsFallback] = useState(false);
 
   const handleSetToday = () => {
     const today = new Date();
@@ -31,6 +32,7 @@ export const CoverLetterSection: React.FC<Props> = ({
 
   const handleGenerateAI = async () => {
     setGenerating(true);
+    setIsFallback(false);
     try {
       const res = await fetch('/api/ai/generate-cover-letter', {
         method: 'POST',
@@ -42,7 +44,8 @@ export const CoverLetterSection: React.FC<Props> = ({
           companyAddress: coverLetter.companyAddress,
           tone,
           language
-        })
+        }),
+        signal: AbortSignal.timeout(8000)
       });
       if (res.ok) {
         const data = await res.json();
@@ -55,9 +58,13 @@ export const CoverLetterSection: React.FC<Props> = ({
             signOff: data.signOff || coverLetter.signOff
           });
         }
+        if (data && data.fallback) {
+          setIsFallback(true);
+        }
       }
     } catch (err) {
       console.error('Failed to generate cover letter:', err);
+      setIsFallback(true);
     } finally {
       setGenerating(false);
     }
@@ -123,7 +130,8 @@ export const CoverLetterSection: React.FC<Props> = ({
             type="button"
             onClick={handleGenerateAI}
             disabled={generating}
-            className="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50"
+            aria-label={isPl ? 'Wygeneruj treść listu motywacyjnego z AI Google Gemini' : 'Generate cover letter body with Google Gemini AI'}
+            className="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             {generating ? (
               <>
@@ -138,6 +146,9 @@ export const CoverLetterSection: React.FC<Props> = ({
             )}
           </button>
         </div>
+      </div>
+      <div className="text-[10px] text-slate-400 px-1 -mt-2">
+        {isPl ? 'Tekst jest wysyłany do Google Gemini w celu wygenerowania sugestii.' : 'Text is sent to Google Gemini to generate suggestions.'}
       </div>
 
       {/* Recipient and details */}

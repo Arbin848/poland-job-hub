@@ -28,7 +28,7 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
   const primary = accentColor || '#18181b';
 
   return (
-    <div className="bg-white text-slate-900 w-full min-h-[1120px] p-8 md:p-12 flex flex-col justify-between font-sans shadow-lg print:shadow-none text-[12.8px] leading-relaxed">
+    <div className="bg-white text-slate-900 w-full min-h-[1120px] print:min-h-0 p-8 md:p-12 flex flex-col justify-between font-sans shadow-lg print:shadow-none text-[12.8px] leading-relaxed">
       <div className="space-y-8">
         {/* Bold Minimalist Header */}
         <header className="border-b-2 border-slate-950 pb-6">
@@ -91,7 +91,7 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
                   size={104}
                   shape="square"
                   verified={cv.agencyBadge?.enabled}
-                  verifiedLabel={cv.agencyBadge?.agencyName || 'Verified Candidate'}
+                  verifiedLabel={cv.agencyBadge?.agencyName || (isPl ? 'Profil kandydata' : 'Candidate Profile')}
                   accentColor={primary}
                 />
               )}
@@ -119,15 +119,15 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
         {vis.experience && experiences && experiences.length > 0 && (
           <section className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-3">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block break-after-avoid">
                 02. {t.experience}
               </span>
             </div>
             <div className="md:col-span-9 space-y-6">
               {experiences.map((exp) => (
-                <div key={exp.id} className="space-y-1.5 border-b border-slate-200 pb-5 last:border-0 last:pb-0">
+                <div key={exp.id} className="space-y-1.5 border-b border-slate-200 pb-5 last:border-0 last:pb-0 experience-item break-inside-avoid">
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                    <h3 className="font-extrabold text-slate-950 text-sm">
+                    <h3 className="font-extrabold text-slate-950 text-sm break-words">
                       {exp.role} <span className="font-medium text-slate-600">@ {exp.company}</span>
                     </h3>
                     <span className="font-mono text-[11px] font-semibold text-slate-500 shrink-0">
@@ -138,9 +138,9 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
                   {exp.bullets && exp.bullets.length > 0 && (
                     <ul className="space-y-1 pt-1 text-[12px] text-slate-700">
                       {exp.bullets.map((b, bi) => (
-                        <li key={bi} className="flex items-start gap-2">
-                          <span className="font-mono text-slate-400 mt-0.5">—</span>
-                          <span>{b}</span>
+                        <li key={bi} className="flex items-start gap-2 break-inside-avoid">
+                          <span className="font-mono text-slate-400 mt-0.5 shrink-0">—</span>
+                          <span className="break-words">{b}</span>
                         </li>
                       ))}
                     </ul>
@@ -155,18 +155,18 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
         {vis.projects && projects && projects.length > 0 && (
           <section className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-3">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block break-after-avoid">
                 03. {t.projects || 'Projects'}
               </span>
             </div>
             <div className="md:col-span-9 space-y-3">
               {projects.map((proj) => (
-                <div key={proj.id} className="p-3 border border-slate-200 bg-slate-50/50 space-y-1">
+                <div key={proj.id} className="p-3 border border-slate-200 bg-slate-50/50 space-y-1 project-item break-inside-avoid">
                   <div className="flex justify-between items-baseline font-bold text-slate-900 text-xs">
-                    <span>{proj.name}</span>
+                    <span className="break-words">{proj.name}</span>
                     {proj.role && <span className="font-mono text-slate-500 text-[11px] font-normal">{proj.role}</span>}
                   </div>
-                  {proj.description && <p className="text-xs text-slate-600">{proj.description}</p>}
+                  {proj.description && <p className="text-xs text-slate-600 break-words">{proj.description}</p>}
                 </div>
               ))}
             </div>
@@ -177,18 +177,18 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
         {vis.education && educations && educations.length > 0 && (
           <section className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-3">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block break-after-avoid">
                 04. {t.education}
               </span>
             </div>
             <div className="md:col-span-9 space-y-3">
               {educations.map((edu) => (
-                <div key={edu.id} className="border-b border-slate-100 pb-3 last:border-0 last:pb-0">
+                <div key={edu.id} className="border-b border-slate-100 pb-3 last:border-0 last:pb-0 education-item break-inside-avoid">
                   <div className="flex justify-between items-baseline font-bold text-slate-950 text-xs">
-                    <span>{edu.degree} · {edu.fieldOfStudy}</span>
-                    <span className="font-mono text-[11px] font-normal text-slate-500">{edu.startDate} — {edu.endDate}</span>
+                    <span className="break-words">{edu.degree} · {edu.fieldOfStudy}</span>
+                    <span className="font-mono text-[11px] font-normal text-slate-500 shrink-0">{edu.startDate} — {edu.endDate}</span>
                   </div>
-                  <div className="text-slate-600 text-xs">{edu.institution} {edu.faculty && `(${edu.faculty})`}</div>
+                  <div className="text-slate-600 text-xs break-words">{edu.institution} {edu.faculty && `(${edu.faculty})`}</div>
                 </div>
               ))}
             </div>
@@ -199,7 +199,7 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
         {((vis.skills && cv.technicalSkills.length > 0) || (vis.languages && languages.length > 0)) && (
           <section className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-3">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 bg-slate-100 px-2.5 py-1 inline-block break-after-avoid">
                 05. {t.skills}
               </span>
             </div>
@@ -218,7 +218,7 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
                 <span className="text-[11px] font-mono font-bold uppercase text-slate-400 block mb-1.5">Languages</span>
                 <div className="space-y-1 font-mono text-xs text-slate-700">
                   {languages.map((l) => (
-                    <div key={l.id} className="flex justify-between border-b border-slate-100 pb-0.5">
+                    <div key={l.id} className="flex justify-between border-b border-slate-100 pb-0.5 break-inside-avoid">
                       <span>{l.language}</span>
                       <span className="font-bold">{l.level}</span>
                     </div>
@@ -232,7 +232,7 @@ export const BerlinMinimalTemplate: React.FC<Props> = ({ cv }) => {
 
       {/* RODO */}
       {vis.rodo && rodo.enabled && (
-        <footer className="pt-8 border-t border-slate-200 font-mono text-[9.5px] text-slate-400">
+        <footer className="pt-8 border-t border-slate-200 font-mono text-[10px] text-slate-500 leading-relaxed rodo-clause-block break-inside-avoid">
           {rodo.text}
         </footer>
       )}

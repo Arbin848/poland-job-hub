@@ -31,7 +31,7 @@ export const QrCodeBadge: React.FC<Props> = ({ text, value, size = 64 }) => {
     <div className="flex flex-col items-center">
       <img
         src={dataUrl}
-        alt="Scan for LinkedIn/Portfolio"
+        alt="Kod QR do profilu online / QR code to online profile"
         style={{ width: size, height: size }}
         className="rounded border border-slate-200 bg-white p-0.5 shadow-2xs"
       />

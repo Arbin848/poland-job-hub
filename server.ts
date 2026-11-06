@@ -1,10 +1,13 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response } from 'express';
 import http from 'http';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -13,26 +16,195 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const rawModel = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+const GEMINI_MODEL = rawModel.includes('2.5') ? 'gemini-3.8-flash' : rawModel;
 
-app.use(express.json({ limit: '5mb' }));
+// JSON body limits: 5mb for large CV text import, 1mb for all other endpoints
+app.use('/api/ai/parse-existing-cv', express.json({ limit: '5mb' }));
+app.use(express.json({ limit: '1mb' }));
+
+// Rate limiter for AI generation endpoints (20 requests per 15 min per IP)
+const aiRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Too many AI requests from this IP. Please try again in a few minutes.',
+    fallback: true
+  }
+});
+
+app.use('/api/ai', aiRateLimiter);
 
 // Initialize Google GenAI if key is provided
 let aiClient: GoogleGenAI | null = null;
 if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'MY_GEMINI_API_KEY') {
   try {
-    aiClient = new GoogleGenAI();
+    aiClient = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        }
+      }
+    });
   } catch (err) {
     console.warn('Failed to initialize Google GenAI with provided key:', err);
   }
 }
 
-// Health check endpoint
-app.get('/api/health', (req: Request, res: Response) => {
+async function generateWithTimeout(
+  prompt: string,
+  timeoutMs = 4000,
+  extraConfig?: Record<string, any>
+) {
+  if (!aiClient) return null;
+  const generatePromise = aiClient.models.generateContent({
+    model: GEMINI_MODEL,
+    contents: prompt,
+    ...(extraConfig ? { config: extraConfig } : {}),
+  });
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error('AI request timed out')), timeoutMs)
+  );
+  return Promise.race([generatePromise, timeoutPromise]);
+}
+
+// Health check & Gemini advisor verification endpoints
+app.all(['/api/health', '/api/gemini/advisor'], (req: Request, res: Response) => {
   res.json({
     status: 'ok',
     aiAvailable: !!aiClient,
+    model: GEMINI_MODEL,
     environment: process.env.NODE_ENV || 'development'
   });
+});
+
+// Explicit download endpoints with Content-Disposition attachment for reliable browser downloads
+app.get(['/PolJobHub_Stage3A_Visual_Acceptance.zip', '/api/download/stage3a-zip'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'PolJobHub_Stage3A_Visual_Acceptance.zip');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="PolJobHub_Stage3A_Visual_Acceptance.zip"');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Stage 3A Visual Acceptance ZIP not found');
+});
+
+app.get(['/PolJobHub_Stage3B_Guided_Editor_Acceptance.zip', '/api/download/stage3b-zip', '/download/stage3b-zip'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'PolJobHub_Stage3B_Guided_Editor_Acceptance.zip');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="PolJobHub_Stage3B_Guided_Editor_Acceptance.zip"');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Stage 3B Guided Editor Acceptance ZIP not found');
+});
+
+app.get(['/PolJobHub_Stage3C_Multipage_A4_Acceptance.zip', '/api/download/stage3c-zip', '/download/stage3c-zip'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'PolJobHub_Stage3C_Multipage_A4_Acceptance.zip');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="PolJobHub_Stage3C_Multipage_A4_Acceptance.zip"');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Stage 3C Multipage A4 Acceptance ZIP not found');
+});
+
+// JSON Base64 fallback for browsers/iframes restricting binary downloads
+app.get('/api/download/stage3c-zip-base64', (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'PolJobHub_Stage3C_Multipage_A4_Acceptance.zip');
+  if (fs.existsSync(filePath)) {
+    const fileBuffer = fs.readFileSync(filePath);
+    return res.json({
+      filename: 'PolJobHub_Stage3C_Multipage_A4_Acceptance.zip',
+      size: fileBuffer.length,
+      mimeType: 'application/zip',
+      base64: fileBuffer.toString('base64')
+    });
+  }
+  res.status(404).json({ error: 'Stage 3C ZIP not found' });
+});
+
+app.get(['/PolJobHub_Stage3D_Final_QA_Acceptance.zip', '/api/download/stage3d-zip', '/download/stage3d-zip'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'PolJobHub_Stage3D_Final_QA_Acceptance.zip');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="PolJobHub_Stage3D_Final_QA_Acceptance.zip"');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Stage 3D Final QA Acceptance ZIP not found');
+});
+
+app.get('/api/download/stage3d-zip-base64', (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'PolJobHub_Stage3D_Final_QA_Acceptance.zip');
+  if (fs.existsSync(filePath)) {
+    const fileBuffer = fs.readFileSync(filePath);
+    return res.json({
+      filename: 'PolJobHub_Stage3D_Final_QA_Acceptance.zip',
+      size: fileBuffer.length,
+      mimeType: 'application/zip',
+      base64: fileBuffer.toString('base64')
+    });
+  }
+  res.status(404).json({ error: 'Stage 3D ZIP not found' });
+});
+
+app.get(['/poljobhub_v5_repo.bundle', '/api/download/git-bundle', '/download/git-bundle'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'poljobhub_v5_repo.bundle');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', 'attachment; filename="poljobhub_v5_repo.bundle"');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Git bundle not found');
+});
+
+app.get(['/evidence/poljobhub_stage3a_pre_backup.tar.gz', '/api/download/stage3a-backup'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'evidence', 'poljobhub_stage3a_pre_backup.tar.gz');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/gzip');
+    res.setHeader('Content-Disposition', 'attachment; filename="poljobhub_stage3a_pre_backup.tar.gz"');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Stage 3A Backup archive not found');
+});
+
+app.get(['/poljobhub_stage3a_final_checkpoint.tar.gz', '/api/download/stage3a-checkpoint'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'poljobhub_stage3a_final_checkpoint.tar.gz');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/gzip');
+    res.setHeader('Content-Disposition', 'attachment; filename="poljobhub_stage3a_final_checkpoint.tar.gz"');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Stage 3A Checkpoint backup archive not found');
 });
 
 // Endpoint: AI Bullet Point Enhancer (STAR method)
@@ -46,7 +218,8 @@ app.post('/api/ai/enhance-bullet', async (req: Request, res: Response) => {
     try {
       const prompt = `You are a premier senior executive recruitment consultant in Poland and Europe.
 Transform the following raw resume bullet point into 3 high-impact, professional resume bullet points.
-Use the STAR method (Situation, Task, Action, Result) with strong action verbs and quantified impact where appropriate.
+Use the STAR method (Situation, Task, Action, Result) with strong action verbs.
+CRITICAL INTEGRITY RULE: NEVER invent fake percentages, monetary numbers, or numerical achievements that the candidate has not supplied. Always prompt the candidate with a placeholder like [uzupełnij mierzalny wynik: % / czas] so they supply their authentic results.
 Target Job Title: "${jobTitle || 'Professional'}"
 Industry / Faculty: "${industry || 'General'}"
 Language: ${language === 'pl' ? 'Polish (Polski)' : 'English'}
@@ -57,10 +230,8 @@ Output format: Return STRICTLY a valid JSON array of 3 strings, e.g.:
 ["Bullet 1", "Bullet 2", "Bullet 3"]
 No markdown fences, no explanations.`;
 
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-      });
+      const response = await generateWithTimeout(prompt);
+      if (!response) throw new Error('No AI response');
 
       const text = response.text?.trim() || '';
       const cleanJson = text.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
@@ -68,8 +239,8 @@ No markdown fences, no explanations.`;
       if (Array.isArray(parsed) && parsed.length > 0) {
         return res.json({ bullets: parsed });
       }
-    } catch (err) {
-      console.warn('AI bullet generation error, falling back to heuristic:', err);
+    } catch (err: any) {
+      console.log('AI bullet generation notice: using fallback heuristic.', err?.message || '');
     }
   }
 
@@ -77,11 +248,11 @@ No markdown fences, no explanations.`;
   const isPl = language === 'pl';
   const clean = duty.trim();
   const fallbackBullets = isPl ? [
-    `Optymalizacja procesów w obszarze: ${clean}, co przełożyło się na wzrost efektywności operacyjnej o ok. 15-20%.`,
+    `Optymalizacja procesów w obszarze: ${clean}, co przełożyło się na wzrost efektywności operacyjnej [uzupełnij mierzalny wynik, np. % / czas / koszt].`,
     `Samodzielna koordynacja zadań związanych z: ${clean}, zgodnie z obowiązującymi standardami jakości i procedurami firmy.`,
     `Skuteczna realizacja kluczowych celów projektowych (${clean}) we współpracy z zespołem multidyscyplinarnym.`
   ] : [
-    `Streamlined operations regarding ${clean}, boosting team efficiency by approximately 15-20%.`,
+    `Streamlined operations regarding ${clean}, boosting team efficiency by [add a measurable result, e.g. % / time / cost].`,
     `Independently coordinated core responsibilities in ${clean}, maintaining strict compliance with quality benchmarks.`,
     `Successfully executed targeted milestones involving ${clean} in cross-functional collaboration.`
   ];
@@ -109,10 +280,8 @@ Details:
 
 Output format: Return ONLY the summary paragraph as plain text (no quotes, no title, no markdown).`;
 
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-      });
+      const response = await generateWithTimeout(prompt);
+      if (!response) throw new Error('No AI response');
 
       const summary = response.text?.trim() || '';
       if (summary) {
@@ -164,10 +333,8 @@ Return STRICTLY a JSON object with this exact structure:
 }
 Keep language in ${language === 'pl' ? 'Polish' : 'English'}. No markdown code blocks, pure JSON.`;
 
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-      });
+      const response = await generateWithTimeout(prompt);
+      if (!response) throw new Error('No AI response');
 
       const text = response.text?.trim() || '';
       const cleanJson = text.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
@@ -255,10 +422,8 @@ Output format: Return STRICTLY a JSON object with this format:
 }
 No markdown blocks, pure JSON.`;
 
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-      });
+      const response = await generateWithTimeout(prompt);
+      if (!response) throw new Error('No AI response');
 
       const text = response.text?.trim() || '';
       const cleanJson = text.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
@@ -339,10 +504,8 @@ ${rawText.slice(0, 4500)}
 
 Return ONLY pure valid JSON. No explanations, no markdown fences.`;
 
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-      });
+      const response = await generateWithTimeout(prompt, 15000);
+      if (!response) throw new Error('No AI response');
 
       const text = response.text?.trim() || '';
       const cleanJson = text.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
@@ -358,26 +521,144 @@ Return ONLY pure valid JSON. No explanations, no markdown fences.`;
   const phoneMatch = rawText.match(/(?:\+48\s?)?(?:\d{3}[-\s]?\d{3}[-\s]?\d{3})/);
   res.json({
     parsed: {
-      fullName: 'Zaimportowany Kandydat',
-      jobTitle: 'Specjalista',
+      fullName: '',
+      jobTitle: '',
       email: emailMatch ? emailMatch[0] : '',
       phone: phoneMatch ? phoneMatch[0] : '',
-      location: 'Polska',
-      summary: rawText.slice(0, 200).replace(/\n/g, ' '),
-      technicalSkills: ['Zarządzanie', 'Komunikacja', 'MS Office'],
-      toolsAndCertificates: ['Prawo jazdy kat. B'],
-      languages: [{ language: 'Polski', level: 'Native' }, { language: 'Angielski', level: 'B2' }]
+      location: '',
+      summary: '',
+      technicalSkills: [],
+      toolsAndCertificates: [],
+      languages: []
     },
     fallback: true
   });
+});
+
+// Endpoint: AI CV Bilingual Translator (Polish <-> English)
+app.post('/api/ai/translate-cv', async (req: Request, res: Response) => {
+  const { cv, targetLanguage = 'en' } = req.body;
+  if (!cv || typeof cv !== 'object') {
+    return res.status(400).json({ error: 'Missing CV data' });
+  }
+
+  const isTargetEn = targetLanguage === 'en';
+
+  if (aiClient) {
+    try {
+      const prompt = `You are a professional executive translator specializing in European CVs and corporate resumes.
+Translate the following CV content into ${isTargetEn ? 'English' : 'Polish'}.
+
+CRITICAL RULES:
+- KEEP names, dates (YYYY-MM), phone numbers, email addresses, and company names EXACTLY as they are.
+- Translate job titles, professional summary, duty bullet points, academic degrees, and skills naturally into professional ${isTargetEn ? 'English' : 'Polish'}.
+- Output STRICTLY a valid JSON object matching the exact structure below.
+
+Input CV:
+${JSON.stringify({
+  jobTitle: cv.personalInfo?.jobTitle || '',
+  summary: cv.summary || '',
+  experiences: (cv.experiences || []).map((e: any) => ({
+    id: e.id,
+    role: e.role,
+    company: e.company,
+    startDate: e.startDate,
+    endDate: e.endDate,
+    bullets: e.bullets
+  })),
+  educations: (cv.educations || []).map((ed: any) => ({
+    id: ed.id,
+    institution: ed.institution,
+    degree: ed.degree,
+    fieldOfStudy: ed.fieldOfStudy
+  })),
+  technicalSkills: cv.technicalSkills || []
+})}
+
+Return ONLY pure valid JSON:
+{
+  "jobTitle": "...",
+  "summary": "...",
+  "experiences": [
+    {
+      "id": "...",
+      "role": "...",
+      "company": "...",
+      "bullets": ["...", "..."]
+    }
+  ],
+  "educations": [
+    {
+      "id": "...",
+      "degree": "...",
+      "fieldOfStudy": "..."
+    }
+  ],
+  "technicalSkills": ["...", "..."]
+}
+No markdown blocks, pure JSON.`;
+
+      const response = await generateWithTimeout(prompt, 20000);
+      if (!response) throw new Error('No AI response');
+
+      const text = response.text?.trim() || '';
+      const cleanJson = text.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
+      const parsed = JSON.parse(cleanJson);
+
+      const translatedCv = {
+        ...cv,
+        language: targetLanguage,
+        personalInfo: {
+          ...cv.personalInfo,
+          jobTitle: parsed.jobTitle || cv.personalInfo.jobTitle
+        },
+        summary: parsed.summary || cv.summary,
+        experiences: (cv.experiences || []).map((exp: any, i: number) => {
+          const transExp = parsed.experiences?.[i];
+          return {
+            ...exp,
+            role: transExp?.role || exp.role,
+            bullets: Array.isArray(transExp?.bullets) ? transExp.bullets : exp.bullets
+          };
+        }),
+        educations: (cv.educations || []).map((edu: any, i: number) => {
+          const transEdu = parsed.educations?.[i];
+          return {
+            ...edu,
+            degree: transEdu?.degree || edu.degree,
+            fieldOfStudy: transEdu?.fieldOfStudy || edu.fieldOfStudy
+          };
+        }),
+        technicalSkills: Array.isArray(parsed.technicalSkills) ? parsed.technicalSkills : cv.technicalSkills
+      };
+
+      return res.json({ cv: translatedCv });
+    } catch (err) {
+      console.warn('AI translation error, falling back:', err);
+    }
+  }
+
+  // Fallback if AI unavailable: switch language flag without corrupting data
+  const fallbackCv = {
+    ...cv,
+    language: targetLanguage
+  };
+  res.json({ cv: fallbackCv, fallback: true });
 });
 
 // Setup Vite middleware in dev or static files in production
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';
   const httpServer = http.createServer(app);
+  const distPath = path.resolve(__dirname, 'dist');
+  const distIndexExists = fs.existsSync(path.resolve(distPath, 'index.html'));
 
-  if (!isProd) {
+  if (isProd && distIndexExists) {
+    app.use(express.static(distPath));
+    app.get('*', (req: Request, res: Response) => {
+      res.sendFile(path.resolve(distPath, 'index.html'));
+    });
+  } else {
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
@@ -388,16 +669,10 @@ async function startServer() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
-  } else {
-    const distPath = path.resolve(__dirname, 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req: Request, res: Response) => {
-      res.sendFile(path.resolve(distPath, 'index.html'));
-    });
   }
 
   httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`PolJobHub Server running on http://0.0.0.0:${PORT} [${isProd ? 'production' : 'development'}]`);
+    console.log(`PolJobHub Server running on http://0.0.0.0:${PORT} [${isProd && distIndexExists ? 'production' : 'development'}]`);
   });
 }
 

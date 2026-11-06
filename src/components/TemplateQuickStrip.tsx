@@ -38,7 +38,7 @@ export const TemplateQuickStrip: React.FC<Props> = ({
     tagEn: string;
     accent: string;
   }[] = [
-    { id: 'modern-polish', labelPl: 'Cascade Pro (Zety)', labelEn: 'Cascade Pro', tagPl: 'Polska Agencja', tagEn: 'Polish Agency', accent: '#1e3a8a' },
+    { id: 'modern-polish', labelPl: 'Cascade Pro (Standard PL)', labelEn: 'Cascade Pro', tagPl: 'Polska Agencja', tagEn: 'Polish Agency', accent: '#1e3a8a' },
     { id: 'swiss-executive', labelPl: 'Swiss Executive', labelEn: 'Swiss Executive', tagPl: 'Prestige Dyrektorski', tagEn: 'Executive Prestige', accent: '#0f172a' },
     { id: 'dynamic-impact', labelPl: 'Executive Banner', labelEn: 'Executive Banner', tagPl: 'Canva Pro Style', tagEn: 'Canva Pro Style', accent: '#b91c1c' },
     { id: 'creative-tech', labelPl: 'Creative Tech', labelEn: 'Creative Tech', tagPl: 'Silicon & IT', tagEn: 'Silicon & IT', accent: '#4f46e5' },
@@ -148,7 +148,8 @@ export const TemplateQuickStrip: React.FC<Props> = ({
                     type="button"
                     onClick={() => onChangeAccentColor(c.hex)}
                     style={{ backgroundColor: c.hex }}
-                    className={`w-4 h-4 rounded-full transition-transform ${
+                    aria-label={`Wybierz kolor akcentu: ${c.label} / Select accent color: ${c.label}`}
+                    className={`w-4 h-4 rounded-full transition-transform focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-900 ${
                       accentColor === c.hex ? 'scale-125 ring-2 ring-slate-900 ring-offset-1' : 'hover:scale-110'
                     }`}
                     title={c.label}

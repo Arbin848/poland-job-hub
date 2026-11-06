@@ -83,6 +83,31 @@ export interface PersonalInfo {
   showPhoto?: boolean;
   qrCodeUrl?: string;
   showQrCode?: boolean;
+  showWorkPermitBadge?: boolean;
+}
+
+export interface JobApplication {
+  id: string;
+  company: string;
+  role: string;
+  location: string;
+  link?: string;
+  cvVersionName?: string;
+  status: 'saved' | 'applied' | 'interview' | 'offer' | 'rejected';
+  appliedDate: string;
+  followUpDate?: string;
+  salaryBrutto?: number;
+  salaryNetto?: number;
+  notes?: string;
+}
+
+export interface CvVersionMeta {
+  id: string;
+  name: string;
+  createdAt: string;
+  jobTarget?: string;
+  templateId: TemplateId;
+  cv: CVData;
 }
 
 export interface RodoClause {

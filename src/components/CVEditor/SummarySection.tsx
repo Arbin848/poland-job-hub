@@ -15,9 +15,11 @@ export const SummarySection: React.FC<Props> = ({ summary, onChange, language, j
   const isPl = language === 'pl';
   const [loading, setLoading] = useState(false);
   const [years, setYears] = useState('3-5');
+  const [isFallback, setIsFallback] = useState(false);
 
   const handleGenerateAI = async () => {
     setLoading(true);
+    setIsFallback(false);
     try {
       const res = await generateProfileSummary(
         jobTitle || (isPl ? 'Specjalista' : 'Professional'),
@@ -29,8 +31,12 @@ export const SummarySection: React.FC<Props> = ({ summary, onChange, language, j
       if (res.summary) {
         onChange(res.summary);
       }
+      if (res.fallback) {
+        setIsFallback(true);
+      }
     } catch (err) {
       console.error(err);
+      setIsFallback(true);
     } finally {
       setLoading(false);
     }
@@ -72,7 +78,8 @@ export const SummarySection: React.FC<Props> = ({ summary, onChange, language, j
             type="button"
             onClick={handleGenerateAI}
             disabled={loading}
-            className="px-3 py-1 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-white rounded transition flex items-center gap-1.5 disabled:opacity-50"
+            aria-label={isPl ? 'Generuj podsumowanie z AI Google Gemini' : 'Generate summary with Google Gemini AI'}
+            className="px-3 py-1 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-white rounded transition flex items-center gap-1.5 disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             {loading ? (
               <>
@@ -88,6 +95,15 @@ export const SummarySection: React.FC<Props> = ({ summary, onChange, language, j
           </button>
         </div>
       </div>
+      <div className="text-[10px] text-slate-400 px-1 -mt-1.5">
+        {isPl ? 'Tekst jest wysyłany do Google Gemini w celu wygenerowania sugestii.' : 'Text is sent to Google Gemini to generate suggestions.'}
+      </div>
+
+      {isFallback && (
+        <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+          <span>⚠️ AI unavailable – template suggestion. Please edit before use.</span>
+        </div>
+      )}
 
       <div>
         <textarea

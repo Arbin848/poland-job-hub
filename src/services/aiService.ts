@@ -29,7 +29,8 @@ export async function enhanceBulletPoint(
     const res = await fetch('/api/ai/enhance-bullet', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ duty, jobTitle, industry, language })
+      body: JSON.stringify({ duty, jobTitle, industry, language }),
+      signal: AbortSignal.timeout(8000)
     });
     if (res.ok) {
       return await res.json();
@@ -43,11 +44,11 @@ export async function enhanceBulletPoint(
   const clean = duty.trim();
   return {
     bullets: isPl ? [
-      `Optymalizacja i koordynacja zadań w zakresie: ${clean}, co przyniosło wymierny wzrost efektywności operacyjnej o ok. 15%.`,
+      `Optymalizacja i koordynacja zadań w zakresie: ${clean}, co przyniosło wymierny wzrost efektywności operacyjnej [uzupełnij mierzalny wynik, np. % / czas / koszt].`,
       `Samodzielna realizacja kluczowych obowiązków (${clean}) z zachowaniem rygorystycznych standardów jakościowych i procedur firmy.`,
       `Wdrożenie usprawnień w obszarze ${clean}, skutkujące skróceniem czasu realizacji zleceń oraz redukcją błędów operacyjnych.`
     ] : [
-      `Streamlined operations regarding ${clean}, driving an estimated 15% increase in throughput and efficiency.`,
+      `Streamlined operations regarding ${clean}, driving measurable efficiency gains [add a measurable result, e.g. % / time / cost].`,
       `Spearheaded core workflow deliverables in ${clean}, maintaining continuous alignment with organizational quality standards.`,
       `Introduced process improvements in ${clean}, cutting execution turnaround time and minimizing recurring bottlenecks.`
     ],
@@ -66,7 +67,8 @@ export async function generateProfileSummary(
     const res = await fetch('/api/ai/generate-summary', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobTitle, yearsOfExperience, faculty, skills, language })
+      body: JSON.stringify({ jobTitle, yearsOfExperience, faculty, skills, language }),
+      signal: AbortSignal.timeout(8000)
     });
     if (res.ok) {
       return await res.json();
@@ -93,7 +95,8 @@ export async function matchJobPosting(
     const res = await fetch('/api/ai/match-job', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobDescription, cvText, language })
+      body: JSON.stringify({ jobDescription, cvText, language }),
+      signal: AbortSignal.timeout(8000)
     });
     if (res.ok) {
       return await res.json();

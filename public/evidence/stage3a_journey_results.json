@@ -1,0 +1,130 @@
+{
+  "testDate": "2026-10-27T15:29:55.528Z",
+  "branch": "stage-3a-homepage-integration",
+  "commit": "ff80e23",
+  "totalSteps": 10,
+  "passedSteps": 10,
+  "overallStatus": "PASS",
+  "steps": [
+    {
+      "step": 1,
+      "name": "Desktop Homepage (1440x960)",
+      "status": "PASS",
+      "details": {
+        "viewport": "1440x960",
+        "headerCount": 1,
+        "horizontalOverflow": false,
+        "devOverlayVisible": false,
+        "headline": "Twórz dokumenty kariery, które otwierają drzwi.",
+        "screenshot": "stage3a_01_homepage_desktop_1440x960.png"
+      }
+    },
+    {
+      "step": 2,
+      "name": "Mobile Homepage (390x844 & 360x800)",
+      "status": "PASS",
+      "details": {
+        "viewport390": {
+          "width": 390,
+          "height": 844,
+          "overflow": false,
+          "devOverlayVisible": false,
+          "previewTopY": 639.25
+        },
+        "viewport360": {
+          "width": 360,
+          "height": 800,
+          "overflow": false,
+          "devOverlayVisible": false,
+          "previewTopY": 662
+        },
+        "screenshots": [
+          "stage3a_02_homepage_mobile_390x844.png",
+          "stage3a_03_homepage_mobile_360x800.png"
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "name": "Editor Entry",
+      "status": "PASS",
+      "details": {
+        "url": "http://localhost:3000/#/editor",
+        "editorFormMounted": true,
+        "candidateUpdated": "Katarzyna Wiśniewska-Kowalska",
+        "screenshot": "stage3a_04_editor_after_create_cta.png"
+      }
+    },
+    {
+      "step": 4,
+      "name": "Saved CV Continuation",
+      "status": "PASS",
+      "details": {
+        "url": "http://localhost:3000/#/editor",
+        "resumeButtonVisible": true,
+        "persistedCandidateName": "Katarzyna Wiśniewska-Kowalska"
+      }
+    },
+    {
+      "step": 5,
+      "name": "Template Gallery",
+      "status": "PASS",
+      "details": {
+        "url": "http://localhost:3000/#/templates",
+        "modernPolishDetected": true,
+        "swissExecutiveDetected": true,
+        "screenshot": "stage3a_05_template_gallery_from_home.png"
+      }
+    },
+    {
+      "step": 6,
+      "name": "Template Selection",
+      "status": "PASS",
+      "details": {
+        "url": "http://localhost:3000/#/editor",
+        "activeTemplateId": "swiss-executive"
+      }
+    },
+    {
+      "step": 7,
+      "name": "Candidate Data Preservation",
+      "status": "PASS",
+      "details": {
+        "fullName": "Katarzyna Wiśniewska-Kowalska",
+        "email": "mikolaj.kaminski@email.com",
+        "phone": "+48 601 234 567",
+        "experienceCount": 2
+      }
+    },
+    {
+      "step": 8,
+      "name": "Language Switching",
+      "status": "PASS",
+      "details": {
+        "englishCtaVisible": true,
+        "englishHeadline": "Career documents engineered to open doors.",
+        "screenshot": "stage3a_06_homepage_english_1440x960.png"
+      }
+    },
+    {
+      "step": 9,
+      "name": "Browser Navigation",
+      "status": "PASS",
+      "details": {
+        "initialUrl": "http://localhost:3000/#/editor",
+        "backUrl": "http://localhost:3000/#/home",
+        "forwardUrl": "http://localhost:3000/#/editor",
+        "navigationSynced": true
+      }
+    },
+    {
+      "step": 10,
+      "name": "PDF Print Workflow",
+      "status": "PASS",
+      "details": {
+        "printButtonVisible": true,
+        "windowPrintExecuted": true
+      }
+    }
+  ]
+}

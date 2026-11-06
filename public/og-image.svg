@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#818cf8" stop-opacity="0.05" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <circle cx="200" cy="150" r="300" fill="url(#glow)" />
+  <circle cx="1050" cy="450" r="250" fill="url(#glow)" />
+
+  <!-- Left Side: Brand & Hero Typography -->
+  <g transform="translate(80, 100)">
+    <!-- Badge -->
+    <rect width="210" height="34" rx="17" fill="#1e3a8a" fill-opacity="0.4" stroke="#6366f1" stroke-width="1.5" />
+    <circle cx="20" cy="17" r="5" fill="#10b981" />
+    <text x="34" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#a5b4fc">POLSKA &amp; UNIA EUROPEJSKA</text>
+
+    <!-- Main Title -->
+    <text x="0" y="95" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="56" font-weight="900" fill="#ffffff" letter-spacing="-1">PolJobHub</text>
+    <text x="0" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="700" fill="#e2e8f0">Profesjonalny Kreator CV i Kariery</text>
+
+    <!-- Subtitle / Value props -->
+    <text x="0" y="200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="500" fill="#94a3b8">10 nowoczesnych szablonów A4 • Zgodność z RODO 2026</text>
+    <text x="0" y="230" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="500" fill="#94a3b8">Optymalizacja pod systemy ATS • Asystent STAR AI</text>
+    <text x="0" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="500" fill="#94a3b8">Kalkulator płac netto/brutto • 100% lokalny w przeglądarce</text>
+
+    <!-- Key Feature Pills -->
+    <g transform="translate(0, 310)">
+      <rect x="0" y="0" width="130" height="36" rx="8" fill="#1e293b" stroke="#334155" />
+      <text x="65" y="23" font-family="sans-serif" font-size="13" font-weight="700" fill="#f8fafc" text-anchor="middle">✓ RODO 2026</text>
+
+      <rect x="142" y="0" width="130" height="36" rx="8" fill="#1e293b" stroke="#334155" />
+      <text x="207" y="23" font-family="sans-serif" font-size="13" font-weight="700" fill="#38bdf8" text-anchor="middle">★ ATS 100%</text>
+
+      <rect x="284" y="0" width="140" height="36" rx="8" fill="#1e293b" stroke="#334155" />
+      <text x="354" y="23" font-family="sans-serif" font-size="13" font-weight="700" fill="#a78bfa" text-anchor="middle">⚡ Gemini AI</text>
+    </g>
+  </g>
+
+  <!-- Right Side: A4 Resume Preview Mockup -->
+  <g transform="translate(710, 50)" filter="url(#shadow)">
+    <!-- Document Card -->
+    <rect width="410" height="530" rx="12" fill="#ffffff" />
+    <!-- Header Band (Modern Polish Pro) -->
+    <rect width="410" height="110" rx="12" fill="#1e3a8a" />
+    <rect y="98" width="410" height="12" fill="#1e3a8a" />
+
+    <!-- Avatar Placeholder -->
+    <circle cx="65" cy="55" r="32" fill="#3b82f6" stroke="#ffffff" stroke-width="3" />
+    <text x="65" y="62" font-family="sans-serif" font-size="20" font-weight="800" fill="#ffffff" text-anchor="middle">AK</text>
+
+    <!-- Candidate Info -->
+    <text x="115" y="48" font-family="sans-serif" font-size="20" font-weight="800" fill="#ffffff">Aleksandra Kowalska</text>
+    <text x="115" y="70" font-family="sans-serif" font-size="12" font-weight="600" fill="#93c5fd">Senior Project Manager &amp; Operations</text>
+    <text x="115" y="88" font-family="sans-serif" font-size="10" font-weight="400" fill="#bfdbfe">Warszawa, Polska • +48 500 123 456</text>
+
+    <!-- Body Layout: Two columns -->
+    <!-- Left Column (sidebar) -->
+    <g transform="translate(24, 130)">
+      <text x="0" y="14" font-family="sans-serif" font-size="10" font-weight="800" fill="#1e3a8a">UMIEJĘTNOŚCI</text>
+      <rect y="22" width="100" height="14" rx="4" fill="#f1f5f9" />
+      <text x="8" y="33" font-family="sans-serif" font-size="8" font-weight="700" fill="#334155">Zarządzanie Scrum</text>
+      <rect y="40" width="100" height="14" rx="4" fill="#f1f5f9" />
+      <text x="8" y="51" font-family="sans-serif" font-size="8" font-weight="700" fill="#334155">SAP ERP &amp; JIRA</text>
+      <rect y="58" width="100" height="14" rx="4" fill="#f1f5f9" />
+      <text x="8" y="69" font-family="sans-serif" font-size="8" font-weight="700" fill="#334155">Optymalizacja Lean</text>
+
+      <text x="0" y="105" font-family="sans-serif" font-size="10" font-weight="800" fill="#1e3a8a">JĘZYKI</text>
+      <text x="0" y="122" font-family="sans-serif" font-size="9" font-weight="600" fill="#1e293b">Polski – Ojczysty</text>
+      <text x="0" y="137" font-family="sans-serif" font-size="9" font-weight="600" fill="#1e293b">Angielski – C1 Biegły</text>
+
+      <text x="0" y="170" font-family="sans-serif" font-size="10" font-weight="800" fill="#1e3a8a">UPRAWNIENIA</text>
+      <text x="0" y="187" font-family="sans-serif" font-size="8.5" font-weight="500" fill="#475569">• Prawo jazdy kat. B</text>
+      <text x="0" y="202" font-family="sans-serif" font-size="8.5" font-weight="500" fill="#475569">• Certyfikat PMP®</text>
+    </g>
+
+    <!-- Right Column (main experience) -->
+    <g transform="translate(150, 130)">
+      <text x="0" y="14" font-family="sans-serif" font-size="11" font-weight="800" fill="#1e3a8a">DOŚWIADCZENIE ZAWODOWE</text>
+      
+      <text x="0" y="35" font-family="sans-serif" font-size="10" font-weight="700" fill="#0f172a">Operations Lead</text>
+      <text x="0" y="48" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#64748b">DHL Supply Chain Polska | 2021 – Obecnie</text>
+      <text x="0" y="62" font-family="sans-serif" font-size="8" font-weight="400" fill="#334155">• Kierowanie 24-osobowym zespołem w centrum logistycznym.</text>
+      <text x="0" y="74" font-family="sans-serif" font-size="8" font-weight="400" fill="#334155">• Wdrożenie systemu WMS zwiększające wydajność o 18%.</text>
+
+      <text x="0" y="102" font-family="sans-serif" font-size="10" font-weight="700" fill="#0f172a">Project Coordinator</text>
+      <text x="0" y="115" font-family="sans-serif" font-size="8.5" font-weight="600" fill="#64748b">Asseco Poland S.A. | 2018 – 2021</text>
+      <text x="0" y="129" font-family="sans-serif" font-size="8" font-weight="400" fill="#334155">• Koordynacja wdrożeń oprogramowania dla sektora bankowego.</text>
+      <text x="0" y="141" font-family="sans-serif" font-size="8" font-weight="400" fill="#334155">• Redukcja opóźnień sprintów o 22% wg metodologii Agile.</text>
+
+      <text x="0" y="172" font-family="sans-serif" font-size="11" font-weight="800" fill="#1e3a8a">EDUKACJA</text>
+      <text x="0" y="191" font-family="sans-serif" font-size="9" font-weight="700" fill="#0f172a">Politechnika Warszawska</text>
+      <text x="0" y="204" font-family="sans-serif" font-size="8.5" font-weight="400" fill="#64748b">Magister Inżynier, Zarządzanie i Inżynieria Produkcji</text>
+    </g>
+
+    <!-- Bottom RODO Clause -->
+    <g transform="translate(24, 490)">
+      <line x1="0" y1="0" x2="362" y2="0" stroke="#e2e8f0" stroke-width="1" />
+      <text x="0" y="12" font-family="sans-serif" font-size="6" font-weight="400" fill="#94a3b8">
+        Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji procesu rekrutacji (zgodnie z RODO 2026).
+      </text>
+    </g>
+  </g>
+</svg>

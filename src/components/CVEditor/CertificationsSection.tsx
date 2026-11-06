@@ -42,6 +42,15 @@ export const CertificationsSection: React.FC<Props> = ({ certifications, onChang
           : 'Official vocational licenses, state certifications, or global accreditations.'}
       </div>
 
+      {certifications.some((c) => /driving|prawo jazdy|licence|license/i.test(c.name || '')) && (
+        <div className="text-[11px] text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg flex items-center justify-between">
+          <span>Converting a foreign licence in Poland?</span>
+          <a href="https://prawojazdy.io" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-indigo-900">
+            &rarr; PrawoJazdy.io
+          </a>
+        </div>
+      )}
+
       <div className="space-y-3">
         {certifications.map((c, idx) => (
           <div key={c.id} className="p-3.5 bg-slate-50 border border-slate-200 rounded-lg space-y-2.5">
