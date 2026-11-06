@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Download, X, Film, Image as ImageIcon, FileText, CheckCircle2, ExternalLink, ShieldCheck } from 'lucide-react';
-import { downloadStage3CZip, downloadGitBundle } from '../../../utils/downloadEvidenceZip';
+import { downloadStage3CZip, downloadGitBundle, downloadSourceZip, downloadGitPatch } from '../../../utils/downloadEvidenceZip';
 
 interface Props {
   isOpen: boolean;
@@ -180,6 +180,10 @@ export const V5VisualEvidenceModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [stage3CMessage, setStage3CMessage] = useState<string>('');
   const [gitBundleStatus, setGitBundleStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle');
   const [gitBundleMessage, setGitBundleMessage] = useState<string>('');
+  const [sourceZipStatus, setSourceZipStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle');
+  const [sourceZipMessage, setSourceZipMessage] = useState<string>('');
+  const [gitPatchStatus, setGitPatchStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle');
+  const [gitPatchMessage, setGitPatchMessage] = useState<string>('');
 
   if (!isOpen) return null;
 
@@ -257,7 +261,7 @@ export const V5VisualEvidenceModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="space-y-1.5 text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">Google Antigravity Handover: Kompletne Repozytorium Git</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">Opcja 1: Kompletne Repozytorium Git Bundle (33.3 MB)</span>
               </div>
               <h3 className="text-base sm:text-lg font-bold text-white">
                 poljobhub_v5_repo.bundle
@@ -268,7 +272,7 @@ export const V5VisualEvidenceModal: React.FC<Props> = ({ isOpen, onClose }) => {
               <div className="text-[11px] font-mono text-indigo-200 flex flex-col sm:flex-row sm:items-center gap-1.5">
                 <span className="font-semibold text-white">SHA-256:</span>
                 <span className="bg-black/40 text-emerald-300 px-2 py-0.5 rounded border border-indigo-500/40 text-[10px] select-all break-all">
-                  aa498dc10cec6bbb5eef551308bc79f2d64cdddb1e83b5e8aa136e3453eddce5
+                  fca207d5af03d901f362c57a0283bba6d85f3c4b16217a3e29af3cc071babe08
                 </span>
                 <span className="text-indigo-300 text-xs">(33.3 MB)</span>
               </div>
@@ -289,9 +293,9 @@ export const V5VisualEvidenceModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <Download className={`w-5 h-5 ${gitBundleStatus === 'downloading' ? 'animate-bounce' : ''}`} />
                 <span>
                   {gitBundleStatus === 'downloading'
-                    ? (gitBundleMessage || 'Pobieranie Bundle (33 MB)...')
+                    ? (gitBundleMessage || 'Pobieranie (33 MB)...')
                     : gitBundleStatus === 'success'
-                    ? (gitBundleMessage || '✓ Pobrano Git Bundle!')
+                    ? (gitBundleMessage || '✓ Pobrano Bundle!')
                     : '⬇ Pobierz Git Bundle (33 MB)'}
                 </span>
               </button>
@@ -307,6 +311,119 @@ export const V5VisualEvidenceModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </a>
             </div>
           </div>
+
+          {/* Quick Download Card for Lightweight Source Code ZIP (438 KB - Recommended for Instant Safari Download) */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-teal-900 via-emerald-950 to-slate-900 text-white border-2 border-teal-400 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-lg">
+            <div className="space-y-1.5 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-300">★ Opcja 2 (Rekomendowana): Lekki ZIP z Kodem Źródłowym (438 KB)</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                poljobhub_v5_source.zip
+              </h3>
+              <p className="text-xs text-teal-100/90 max-w-xl leading-relaxed">
+                Zawiera <strong>wszystkie pliki źródłowe</strong> (<code>src/</code>, <code>docs/antigravity-handover/</code>, <code>scripts/</code>, szablony, konfigurację). Pobiera się <strong>natychmiast w Safari</strong> dzięki kodowaniu pamięciowemu Base64.
+              </p>
+              <div className="text-[11px] font-mono text-teal-200 flex flex-col sm:flex-row sm:items-center gap-1.5">
+                <span className="font-semibold text-white">SHA-256:</span>
+                <span className="bg-black/40 text-teal-300 px-2 py-0.5 rounded border border-teal-500/40 text-[10px] select-all break-all">
+                  306e0ff894fc1205e07a196b3dad179dc910bc0041d0fd11e2767ba6aa7ec978
+                </span>
+                <span className="text-teal-300 text-xs">(438 KB)</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto shrink-0">
+              <button
+                type="button"
+                onClick={async () => {
+                  await downloadSourceZip((status, msg) => {
+                    setSourceZipStatus(status);
+                    if (msg) setSourceZipMessage(msg);
+                  });
+                }}
+                disabled={sourceZipStatus === 'downloading'}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 active:scale-95 text-slate-950 font-black text-sm shadow-xl flex items-center justify-center gap-2.5 transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer shrink-0 disabled:opacity-80"
+              >
+                <Download className={`w-5 h-5 ${sourceZipStatus === 'downloading' ? 'animate-bounce' : ''}`} />
+                <span>
+                  {sourceZipStatus === 'downloading'
+                    ? (sourceZipMessage || 'Pobieranie...')
+                    : sourceZipStatus === 'success'
+                    ? (sourceZipMessage || '✓ Pobrano Kod ZIP!')
+                    : '⬇ Pobierz Kod ZIP (438 KB)'}
+                </span>
+              </button>
+
+              <a
+                href="/poljobhub_v5_source.zip"
+                download="poljobhub_v5_source.zip"
+                className="w-full sm:w-auto px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-white/20"
+                title="Pobieranie standardowe przeglądarki"
+              >
+                <ExternalLink className="w-4 h-4 text-teal-300" />
+                <span>Link Bezpośredni</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Download Card for Git Patch (1.3 MB) */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white border-2 border-slate-600 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-lg">
+            <div className="space-y-1.5 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-300">Opcja 3: Łatka Git Patch (1.3 MB)</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                poljobhub_v5_stage3d.patch
+              </h3>
+              <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
+                Plik łatki diff (<code>git diff origin/main...stage-3d-final-qa</code>). Można zaaplikować bezpośrednio w istniejącym repozytorium GitHub poleceniem <code>git apply poljobhub_v5_stage3d.patch</code>.
+              </p>
+              <div className="text-[11px] font-mono text-slate-400 flex flex-col sm:flex-row sm:items-center gap-1.5">
+                <span className="font-semibold text-white">SHA-256:</span>
+                <span className="bg-black/40 text-amber-300 px-2 py-0.5 rounded border border-slate-600 text-[10px] select-all break-all">
+                  66bca31e0268d019bdc0c2436dc90667ced4da728fcdeca8e198c699c0333edf
+                </span>
+                <span className="text-slate-400 text-xs">(1.3 MB)</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto shrink-0">
+              <button
+                type="button"
+                onClick={async () => {
+                  await downloadGitPatch((status, msg) => {
+                    setGitPatchStatus(status);
+                    if (msg) setGitPatchMessage(msg);
+                  });
+                }}
+                disabled={gitPatchStatus === 'downloading'}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black text-sm shadow-xl flex items-center justify-center gap-2.5 transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer shrink-0 disabled:opacity-80"
+              >
+                <Download className={`w-5 h-5 ${gitPatchStatus === 'downloading' ? 'animate-bounce' : ''}`} />
+                <span>
+                  {gitPatchStatus === 'downloading'
+                    ? (gitPatchMessage || 'Pobieranie...')
+                    : gitPatchStatus === 'success'
+                    ? (gitPatchMessage || '✓ Pobrano Łatkę!')
+                    : '⬇ Pobierz Łatkę Git (1.3 MB)'}
+                </span>
+              </button>
+
+              <a
+                href="/poljobhub_v5_stage3d.patch"
+                download="poljobhub_v5_stage3d.patch"
+                className="w-full sm:w-auto px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-white/20"
+                title="Pobieranie standardowe przeglądarki"
+              >
+                <ExternalLink className="w-4 h-4 text-slate-400" />
+                <span>Link Bezpośredni</span>
+              </a>
+            </div>
+          </div>
+
 
           {/* Primary Quick Download Card for Stage 3C ZIP */}
           <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-50 via-purple-50/30 to-white border-2 border-indigo-300 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xs">

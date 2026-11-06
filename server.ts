@@ -170,6 +170,14 @@ app.get('/api/download/stage3d-zip-base64', (req: Request, res: Response) => {
 
 app.get(['/poljobhub_v5_repo.bundle', '/api/download/git-bundle', '/download/git-bundle'], (req: Request, res: Response) => {
   const filePath = path.resolve(__dirname, 'public', 'poljobhub_v5_repo.bundle');
+  if (!fs.existsSync(filePath)) {
+    try {
+      const { execSync } = require('child_process');
+      execSync('git bundle create public/poljobhub_v5_repo.bundle --all', { cwd: __dirname });
+    } catch (err) {
+      console.error('Auto-generation of git bundle failed:', err);
+    }
+  }
   if (fs.existsSync(filePath)) {
     res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('Content-Disposition', 'attachment; filename="poljobhub_v5_repo.bundle"');
@@ -180,7 +188,91 @@ app.get(['/poljobhub_v5_repo.bundle', '/api/download/git-bundle', '/download/git
     res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
     return res.sendFile(filePath);
   }
-  res.status(404).send('Git bundle not found');
+  res.status(500).send('Git bundle could not be found or generated');
+});
+
+app.get(['/poljobhub_v5_source.zip', '/api/download/source-zip', '/download/source-zip'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'poljobhub_v5_source.zip');
+  if (!fs.existsSync(filePath)) {
+    try {
+      const { execSync } = require('child_process');
+      execSync(`python3 -c "import zipfile, os
+with zipfile.ZipFile('public/poljobhub_v5_source.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+    for folder in ['src', 'docs', 'scripts']:
+        for root, _, files in os.walk(folder):
+            for f in files:
+                p = os.path.join(root, f)
+                z.write(p)
+    for f in ['index.html', 'package.json', 'tsconfig.json', 'vite.config.ts', 'server.ts', 'README.md', '.env.example']:
+        if os.path.exists(f):
+            z.write(f)
+"`, { cwd: __dirname });
+    } catch (err) {
+      console.error('Auto-generation of source zip failed:', err);
+    }
+  }
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="poljobhub_v5_source.zip"');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(500).send('Source zip could not be found or generated');
+});
+
+app.get('/api/download/source-zip-base64', (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'poljobhub_v5_source.zip');
+  if (fs.existsSync(filePath)) {
+    const fileBuffer = fs.readFileSync(filePath);
+    return res.json({
+      filename: 'poljobhub_v5_source.zip',
+      size: fileBuffer.length,
+      mimeType: 'application/zip',
+      base64: fileBuffer.toString('base64')
+    });
+  }
+  res.status(404).json({ error: 'Source zip not found' });
+});
+
+app.get(['/poljobhub_v5_stage3d.patch', '/api/download/git-patch', '/download/git-patch'], (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'poljobhub_v5_stage3d.patch');
+  if (!fs.existsSync(filePath)) {
+    try {
+      const { execSync } = require('child_process');
+      execSync('git diff origin/main...stage-3d-final-qa > public/poljobhub_v5_stage3d.patch', { cwd: __dirname });
+    } catch (err) {
+      console.error('Auto-generation of git patch failed:', err);
+    }
+  }
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'text/x-diff; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="poljobhub_v5_stage3d.patch"');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Length');
+    return res.sendFile(filePath);
+  }
+  res.status(500).send('Git patch could not be found or generated');
+});
+
+app.get('/api/download/git-patch-base64', (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, 'public', 'poljobhub_v5_stage3d.patch');
+  if (fs.existsSync(filePath)) {
+    const fileBuffer = fs.readFileSync(filePath);
+    return res.json({
+      filename: 'poljobhub_v5_stage3d.patch',
+      size: fileBuffer.length,
+      mimeType: 'text/x-diff',
+      base64: fileBuffer.toString('base64')
+    });
+  }
+  res.status(404).json({ error: 'Git patch not found' });
 });
 
 app.get(['/evidence/poljobhub_stage3a_pre_backup.tar.gz', '/api/download/stage3a-backup'], (req: Request, res: Response) => {

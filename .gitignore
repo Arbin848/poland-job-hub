@@ -19,3 +19,4 @@ review_pkg_staging/
 *.bundle
 -e downloads/
 my_folder/
+*.patch

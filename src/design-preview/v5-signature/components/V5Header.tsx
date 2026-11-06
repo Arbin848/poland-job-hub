@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Sparkles, Eye, FileText, CheckCircle2, Globe, Shield, Printer, Download, Menu, X } from 'lucide-react';
 import { V5ViewMode, V5StepId, V5_STEPS } from '../types';
 import { LanguageCode } from '../../../types/cv';
-import { downloadStage3CZip, downloadGitBundle } from '../../../utils/downloadEvidenceZip';
+import { downloadStage3CZip, downloadGitBundle, downloadSourceZip } from '../../../utils/downloadEvidenceZip';
 
 interface Props {
   viewMode: V5ViewMode;
@@ -51,6 +51,16 @@ export const V5Header: React.FC<Props> = ({
     await downloadGitBundle((status, msg) => {
       setGitBundleStatus(status);
       if (msg) setGitBundleMessage(msg);
+    });
+  };
+
+  const [sourceZipStatus, setSourceZipStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle');
+  const [sourceZipMessage, setSourceZipMessage] = useState<string>('');
+
+  const handleTriggerSourceZip = async () => {
+    await downloadSourceZip((status, msg) => {
+      setSourceZipStatus(status);
+      if (msg) setSourceZipMessage(msg);
     });
   };
 
@@ -205,7 +215,26 @@ export const V5Header: React.FC<Props> = ({
                 ? (gitBundleMessage || 'Pobieranie (33 MB)...')
                 : gitBundleStatus === 'success'
                 ? (gitBundleMessage || '✓ Pobrano Bundle!')
-                : '⬇ Pobierz Git Bundle (33 MB)'}
+                : '⬇ Git Bundle (33 MB)'}
+            </span>
+          </button>
+
+          {/* Download Source Code ZIP (438 KB - Lightweight instant download) */}
+          <button
+            type="button"
+            onClick={handleTriggerSourceZip}
+            disabled={sourceZipStatus === 'downloading'}
+            className="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 active:scale-95 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm cursor-pointer ring-1 ring-teal-400/40 disabled:opacity-80"
+            title="Pobierz lekki ZIP ze wszystkimi plikami źródłowymi, szablonami i dokumentacją (438 KB)"
+            aria-label="Pobierz Kod ZIP (438 KB)"
+          >
+            <Download className={`w-3.5 h-3.5 text-teal-200 ${sourceZipStatus === 'downloading' ? 'animate-bounce' : ''}`} />
+            <span>
+              {sourceZipStatus === 'downloading'
+                ? (sourceZipMessage || 'Pobieranie...')
+                : sourceZipStatus === 'success'
+                ? (sourceZipMessage || '✓ Pobrano Kod!')
+                : '⬇ Kod ZIP (438 KB)'}
             </span>
           </button>
 

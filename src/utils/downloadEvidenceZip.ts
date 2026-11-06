@@ -281,3 +281,147 @@ export async function downloadGitBundle(
   }
 }
 
+export async function downloadSourceZip(
+  onStatusChange?: (status: 'idle' | 'downloading' | 'success' | 'error', message?: string) => void
+): Promise<boolean> {
+  const filename = 'poljobhub_v5_source.zip';
+  const binaryUrl = '/api/download/source-zip';
+  const base64Url = '/api/download/source-zip-base64';
+
+  if (onStatusChange) {
+    onStatusChange('downloading', 'Pobieranie kodu ZIP (438 KB)...');
+  }
+
+  const saveBlob = (blob: Blob, name: string) => {
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = blobUrl;
+    link.download = name;
+    link.setAttribute('download', name);
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      try {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch {}
+    }, 4000);
+  };
+
+  try {
+    const res = await fetch(binaryUrl);
+    if (res.ok) {
+      const blob = await res.blob();
+      if (blob.size > 500) {
+        saveBlob(blob, filename);
+        if (onStatusChange) {
+          onStatusChange('success', '✓ Pobrano ZIP z kodem!');
+          setTimeout(() => onStatusChange('idle'), 3500);
+        }
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn('[SourceZip] Blob fetch failed, trying base64:', err);
+  }
+
+  try {
+    const res = await fetch(base64Url);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.base64) {
+        const binaryStr = window.atob(json.base64);
+        const len = binaryStr.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryStr.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'application/zip' });
+        saveBlob(blob, filename);
+        if (onStatusChange) {
+          onStatusChange('success', '✓ Pobrano ZIP z kodem!');
+          setTimeout(() => onStatusChange('idle'), 3500);
+        }
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn('[SourceZip] Base64 fetch failed:', err);
+  }
+
+  return false;
+}
+
+export async function downloadGitPatch(
+  onStatusChange?: (status: 'idle' | 'downloading' | 'success' | 'error', message?: string) => void
+): Promise<boolean> {
+  const filename = 'poljobhub_v5_stage3d.patch';
+  const binaryUrl = '/api/download/git-patch';
+  const base64Url = '/api/download/git-patch-base64';
+
+  if (onStatusChange) {
+    onStatusChange('downloading', 'Pobieranie łatki Git Patch (1.3 MB)...');
+  }
+
+  const saveBlob = (blob: Blob, name: string) => {
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = blobUrl;
+    link.download = name;
+    link.setAttribute('download', name);
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      try {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch {}
+    }, 4000);
+  };
+
+  try {
+    const res = await fetch(binaryUrl);
+    if (res.ok) {
+      const blob = await res.blob();
+      if (blob.size > 500) {
+        saveBlob(blob, filename);
+        if (onStatusChange) {
+          onStatusChange('success', '✓ Pobrano łatkę Git Patch!');
+          setTimeout(() => onStatusChange('idle'), 3500);
+        }
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn('[GitPatch] Blob fetch failed, trying base64:', err);
+  }
+
+  try {
+    const res = await fetch(base64Url);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.base64) {
+        const binaryStr = window.atob(json.base64);
+        const len = binaryStr.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryStr.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'text/x-diff' });
+        saveBlob(blob, filename);
+        if (onStatusChange) {
+          onStatusChange('success', '✓ Pobrano łatkę Git Patch!');
+          setTimeout(() => onStatusChange('idle'), 3500);
+        }
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn('[GitPatch] Base64 fetch failed:', err);
+  }
+
+  return false;
+}
+
